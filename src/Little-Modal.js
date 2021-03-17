@@ -127,12 +127,20 @@ export default class LittleModal {
     this.valueX -= this.x1
   	this.valueY -= this.y1
 
+  	//valueX = valueX > windowWidth ? windowWidth : valueX > 0 ? valueX : 0
+  	//valueY = valueY > windowHeight ? windowHeight : valueY > 0 ? valueY : 0
+
+  	this.valueX = this.valueX > w - this.currentWidth ? w - this.currentWidth : this.valueX > 0 ? this.valueX : 0
+  	this.valueY = this.valueY > h - this.currentHeight ? h - this.currentHeight : this.valueY > 0 ? this.valueY : 0
+
+  	/*
+
 	  this.valueX =  this.valueX < 0 ? 0 : this.valueX
 	  this.valueY = this.valueY < 0 ? 0 : this.valueY
 
 
 	  this.valueX = w - this.$element.offsetWidth > this.valueX ? this.valueX : w - this.$element.offsetWidth
-	  this.valueY = h - this.$element.offsetHeight > this.valueY ? this.valueY : h - this.$element.offsetHeight
+	  this.valueY = h - this.$element.offsetHeight > this.valueY ? this.valueY : h - this.$element.offsetHeight*/
 
 
     //console.log(w, h, this.valueY)
