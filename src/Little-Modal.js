@@ -78,6 +78,10 @@ export default class LittleModal {
 		document.body.insertAdjacentElement('afterbegin', $element);
 		this.currentWidth = this.$element.offsetWidth;
 		this.currentHeight = this.$element.offsetHeight;
+		this.windowWidth = window.innerWidth;
+		this.windowHeight = window.innerHeight;
+		this.limitWidth = this.windowWidth - this.currentWidth;
+		this.limitHeight = this.windowHeight - this.currentHeight;
 		this.ElPosition = this.$element.getBoundingClientRect();
 		this.valueX = 0;
 		this.valueY = 0;
@@ -111,7 +115,10 @@ export default class LittleModal {
 		let top = this.$element.getBoundingClientRect().top
 		//console.log(e.clientX, e.clientY)
 		//console.log(this.ev_pos(e, this.$body))
-		this.setPosition(e);
+
+		if(e.clientX > 0 && e.clientX < this.windowWidth && e.clientY > 0 && e.clientY < this.windowHeight){
+			this.setPosition(e);
+		}
 	}
 
 	setPosition(e) {
@@ -120,30 +127,25 @@ export default class LittleModal {
     this.x2 = e.clientX;
     this.y2 = e.clientY;
 
-    let elPos = this.$element.getBoundingClientRect();
-	  let w = window.innerWidth;
-		let h = window.innerHeight;
+    //console.log(this.windowWidth)
 
     this.valueX -= this.x1
   	this.valueY -= this.y1
 
-  	this.valueX = this.valueX > w - this.currentWidth ? w - this.currentWidth : this.valueX > 0 ? (this.dX >= 0 ? this.valueX : 0) : 0
-  	this.valueY = this.valueY > h - this.currentHeight ? h - this.currentHeight : this.valueY > 0 ? (this.dY >= 0 ? this.valueY : 0) : 0
-  	
-  	//j
-  	this.valueX = this.dX > 0 ? w - this.currentWidth : this.valueX;
-  	this.valueY = this.dY > 0 ? h - this.currentHeight : this.valueY;
+	  this.valueX = this.valueX > this.limitWidth ? this.limitWidth : (this.dX > 0 ? this.limitWidth : this.valueX)
+	  this.valueY = this.valueY > this.limitHeight ? this.limitHeight : (this.dY > 0 ? this.limitHeight : this.valueY)
 
-  	this.dX = this.valueX > 0 ? this.dX : this.dX - this.x1;
-  	this.dY = this.valueY > 0 ? this.dY : this.dY - this.y1;
+  	this.valueX = this.valueX > 0 ? (this.dX < 0 ? 0 : this.valueX) : 0
+  	this.valueY = this.valueY > 0 ? (this.dY < 0 ? 0 : this.valueY) : 0
 
-  	this.dX = this.valueX < w - this.currentWidth ? this.dX : this.dX - this.x1
-  	this.dY = this.valueY < h - this.currentHeight ? this.dY : this.dY - this.y1
+  	this.dX = this.valueX == 0 ? this.dX - this.x1 : this.dX
+  	this.dY = this.valueY == 0 ? this.dY - this.y1 : this.dY
 
+  	this.dX = this.valueX == this.limitWidth ? this.dX - this.x1 : this.dX
+  	this.dY = this.valueY == this.limitHeight ? this.dY - this.y1 : this.dY
 
     this.$element.style.left = this.valueX + 'px'
   	this.$element.style.top = this.valueY + 'px'
-    
     
 	}
 
