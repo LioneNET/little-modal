@@ -127,38 +127,22 @@ export default class LittleModal {
     this.valueX -= this.x1
   	this.valueY -= this.y1
 
-  	//valueX = valueX > windowWidth ? windowWidth : valueX > 0 ? valueX : 0
-  	//valueY = valueY > windowHeight ? windowHeight : valueY > 0 ? valueY : 0
+  	this.valueX = this.valueX > w - this.currentWidth ? w - this.currentWidth : this.valueX > 0 ? (this.dX >= 0 ? this.valueX : 0) : 0
+  	this.valueY = this.valueY > h - this.currentHeight ? h - this.currentHeight : this.valueY > 0 ? (this.dY >= 0 ? this.valueY : 0) : 0
+  	
+  	//j
+  	this.valueX = this.dX > 0 ? w - this.currentWidth : this.valueX;
+  	this.valueY = this.dY > 0 ? h - this.currentHeight : this.valueY;
 
-  	this.valueX = this.valueX > w - this.currentWidth ? w - this.currentWidth : this.valueX > 0 ? this.valueX : 0
-  	this.valueY = this.valueY > h - this.currentHeight ? h - this.currentHeight : this.valueY > 0 ? this.valueY : 0
+  	this.dX = this.valueX > 0 ? this.dX : this.dX - this.x1;
+  	this.dY = this.valueY > 0 ? this.dY : this.dY - this.y1;
 
-  	/*
-
-	  this.valueX =  this.valueX < 0 ? 0 : this.valueX
-	  this.valueY = this.valueY < 0 ? 0 : this.valueY
-
-
-	  this.valueX = w - this.$element.offsetWidth > this.valueX ? this.valueX : w - this.$element.offsetWidth
-	  this.valueY = h - this.$element.offsetHeight > this.valueY ? this.valueY : h - this.$element.offsetHeight*/
+  	this.dX = this.valueX < w - this.currentWidth ? this.dX : this.dX - this.x1
+  	this.dY = this.valueY < h - this.currentHeight ? this.dY : this.dY - this.y1
 
 
-    //console.log(w, h, this.valueY)
-    //console.log(this.valueX, this.valueY)
-    /*
-    let element = this.$element;
-    let elPos = this.$element.getBoundingClientRect();
-    let x = 0;
-    let y = 0;
-
-    if(elPos.left >0 && elPos.top > 0) {
-    	x = (element.offsetLeft - this.x1)
-    	y = (element.offsetTop - this.y1)
-    }*/
     this.$element.style.left = this.valueX + 'px'
   	this.$element.style.top = this.valueY + 'px'
-
-    
     
     
 	}
