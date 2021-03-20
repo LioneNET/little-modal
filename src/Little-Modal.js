@@ -63,6 +63,9 @@ export default class LittleModal {
 		this.dX = 0
 		this.dY = 0
 
+		this.tochX
+		this.tochY
+
 		this.maxWidth = o.maxWidth || 500
 		this.maxHeight = o.maxHeight || 300
 		this.options = o
@@ -86,6 +89,8 @@ export default class LittleModal {
 		this.valueX = 0;
 		this.valueY = 0;
 
+
+
 		this.init();
 	}
 
@@ -97,6 +102,8 @@ export default class LittleModal {
 	mouseDownHandler(e) {
 		this.x2 = e.clientX
 		this.y2 = e.clientY
+
+
 		this.dX = 0
 		this.dY = 0
 
