@@ -146,7 +146,8 @@ export default class LittleModal {
   	this.valueY = e.clientY > minY ? this.valueY : 0
   	this.valueY = e.clientY > maxY ? this.limitHeight : this.valueY
 
-  	console.log(`valueX:${this.valueX}, valueY:${this.valueY}, tochX:${this.tochX}, tochY:${this.tochY}, x1:${this.x1}, y1:${this.y1}`)
+  	//console.log(`valueX:${this.valueX}, valueY:${this.valueY}, tochX:${this.tochX}, tochY:${this.tochY}, x1:${this.x1}, y1:${this.y1}`)
+  	console.log(`valueX: ${this.valueX}, eX:${e.clientX}, minX:${minX}`)
 
     this.$element.style.left = this.valueX + 'px'
   	this.$element.style.top = this.valueY + 'px'
