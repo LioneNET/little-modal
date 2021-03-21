@@ -59,12 +59,9 @@ export default class LittleModal {
 		this.x2 = 0
 		this.y1 = 0
 		this.y2 = 0
-		
-		this.dX = 0
-		this.dY = 0
 
-		this.tochX
-		this.tochY
+		this.tochX = 0
+		this.tochY = 0
 
 		this.maxWidth = o.maxWidth || 500
 		this.maxHeight = o.maxHeight || 300
@@ -85,7 +82,6 @@ export default class LittleModal {
 		this.windowHeight = window.innerHeight;
 		this.limitWidth = this.windowWidth - this.currentWidth;
 		this.limitHeight = this.windowHeight - this.currentHeight;
-		this.ElPosition = this.$element.getBoundingClientRect();
 		this.valueX = 0;
 		this.valueY = 0;
 
@@ -103,6 +99,8 @@ export default class LittleModal {
 		this.x2 = e.clientX
 		this.y2 = e.clientY
 
+		this.tochX = e.clientX - this.$element.getBoundingClientRect().left
+		this.tochY = e.clientY - this.$element.getBoundingClientRect().top
 
 		this.dX = 0
 		this.dY = 0
@@ -117,39 +115,38 @@ export default class LittleModal {
 	}
 
 	mouseMoveHandler(e) {
-		let element = this.$element;
-		let left = this.$element.getBoundingClientRect().left
-		let top = this.$element.getBoundingClientRect().top
-		//console.log(e.clientX, e.clientY)
-		//console.log(this.ev_pos(e, this.$body))
-
-		if(e.clientX > 0 && e.clientX < this.windowWidth && e.clientY > 0 && e.clientY < this.windowHeight){
+		if(e.clientX > 0 && e.clientX < this.windowWidth && e.clientY > 0 && e.clientY < this.windowHeight) {
 			this.setPosition(e);
 		}
 	}
 
 	setPosition(e) {
+		let minX = this.tochX
+		let maxX = this.windowWidth - this.currentWidth + this.tochX
+		let minY = this.tochY
+		let maxY = this.windowHeight - this.currentHeight + this.tochY
+
 		this.x1 = this.x2 - e.clientX;
     this.y1 = this.y2 - e.clientY;
     this.x2 = e.clientX;
     this.y2 = e.clientY;
 
-    //console.log(this.windowWidth)
+	  this.valueX -= this.x1
+	  this.valueY -= this.y1
+			
+		this.valueX = this.valueX > 0 ? this.valueX : 0
+  	this.valueX = this.valueX > this.limitWidth ? this.limitWidth : this.valueX
 
-    this.valueX -= this.x1
-  	this.valueY -= this.y1
+  	this.valueY = this.valueY > 0 ? this.valueY : 0
+  	this.valueY = this.valueY > this.limitHeight ? this.limitHeight : this.valueY
 
-	  this.valueX = this.valueX > this.limitWidth ? this.limitWidth : (this.dX > 0 ? this.limitWidth : this.valueX)
-	  this.valueY = this.valueY > this.limitHeight ? this.limitHeight : (this.dY > 0 ? this.limitHeight : this.valueY)
+  	this.valueX = e.clientX > minX ? this.valueX : 0
+  	this.valueX = e.clientX > maxX ? this.limitWidth : this.valueX
 
-  	this.valueX = this.valueX > 0 ? (this.dX < 0 ? 0 : this.valueX) : 0
-  	this.valueY = this.valueY > 0 ? (this.dY < 0 ? 0 : this.valueY) : 0
+  	this.valueY = e.clientY > minY ? this.valueY : 0
+  	this.valueY = e.clientY > maxY ? this.limitHeight : this.valueY
 
-  	this.dX = this.valueX == 0 ? this.dX - this.x1 : this.dX
-  	this.dY = this.valueY == 0 ? this.dY - this.y1 : this.dY
-
-  	this.dX = this.valueX == this.limitWidth ? this.dX - this.x1 : this.dX
-  	this.dY = this.valueY == this.limitHeight ? this.dY - this.y1 : this.dY
+  	console.log(`valueX:${this.valueX}, valueY:${this.valueY}, tochX:${this.tochX}, tochY:${this.tochY}, x1:${this.x1}, y1:${this.y1}`)
 
     this.$element.style.left = this.valueX + 'px'
   	this.$element.style.top = this.valueY + 'px'
