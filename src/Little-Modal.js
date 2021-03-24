@@ -55,10 +55,6 @@ function getTemplate(o){
 export default class LittleModal {
 	constructor(element='body', o={}){
 		let $element = getTemplate(this.options)
-		this.x1 = 0
-		this.x2 = 0
-		this.y1 = 0
-		this.y2 = 0
 
 		this.tochX = 0
 		this.tochY = 0
@@ -76,16 +72,14 @@ export default class LittleModal {
 		document.querySelector(element) ? 
 		document.querySelector(element).appendChild($element) : 
 		document.body.insertAdjacentElement('afterbegin', $element);
-		this.currentWidth = this.$element.offsetWidth;
-		this.currentHeight = this.$element.offsetHeight;
+		this.elementWidth = this.$element.offsetWidth;
+		this.elementHeight = this.$element.offsetHeight;
 		this.windowWidth = window.innerWidth;
 		this.windowHeight = window.innerHeight;
-		this.limitWidth = this.windowWidth - this.currentWidth;
-		this.limitHeight = this.windowHeight - this.currentHeight;
+		this.limitWidth = this.windowWidth - this.elementWidth;
+		this.limitHeight = this.windowHeight - this.elementHeight;
 		this.valueX = 0;
 		this.valueY = 0;
-
-
 
 		this.init();
 	}
@@ -96,14 +90,10 @@ export default class LittleModal {
 	}
 
 	mouseDownHandler(e) {
-		this.x2 = e.clientX
-		this.y2 = e.clientY
 
 		this.tochX = e.clientX - this.$element.getBoundingClientRect().left
 		this.tochY = e.clientY - this.$element.getBoundingClientRect().top
-
-		this.dX = 0
-		this.dY = 0
+		console.log(this.tochX, this.tochY)
 
 		document.addEventListener('mouseup', this.mouseUpHandler)
 		document.addEventListener('mousemove', this.mouseMoveHandler);
@@ -122,17 +112,12 @@ export default class LittleModal {
 
 	setPosition(e) {
 		let minX = this.tochX
-		let maxX = this.windowWidth - this.currentWidth + this.tochX
+		let maxX = this.windowWidth - this.elementWidth + this.tochX
 		let minY = this.tochY
-		let maxY = this.windowHeight - this.currentHeight + this.tochY
+		let maxY = this.windowHeight - this.elementHeight + this.tochY
 
-		this.x1 = this.x2 - e.clientX;
-    this.y1 = this.y2 - e.clientY;
-    this.x2 = e.clientX;
-    this.y2 = e.clientY;
-
-	  this.valueX -= this.x1
-	  this.valueY -= this.y1
+	  this.valueX = e.clientX - this.tochX
+	  this.valueY = e.clientY - this.tochY
 			
 		this.valueX = this.valueX > 0 ? this.valueX : 0
   	this.valueX = this.valueX > this.limitWidth ? this.limitWidth : this.valueX
@@ -146,12 +131,8 @@ export default class LittleModal {
   	this.valueY = e.clientY > minY ? this.valueY : 0
   	this.valueY = e.clientY > maxY ? this.limitHeight : this.valueY
 
-  	//console.log(`valueX:${this.valueX}, valueY:${this.valueY}, tochX:${this.tochX}, tochY:${this.tochY}, x1:${this.x1}, y1:${this.y1}`)
-  	console.log(`valueX: ${this.valueX}, eX:${e.clientX}, minX:${minX}`)
-
     this.$element.style.left = this.valueX + 'px'
   	this.$element.style.top = this.valueY + 'px'
-    
 	}
 
 }
