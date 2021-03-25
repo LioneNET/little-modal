@@ -7,11 +7,18 @@
 	<link rel="stylesheet" href="dist/style.css">
 </head>
 <body>
-	<div class="modal"></div>
+	<div class="box">
+		<div class="modal"></div>
+	</div>
 
-	<script type="text/javascript" src="dist/littlemodal.js"></script>
+	
 </body>
+	<script type="text/javascript" src="dist/littlemodal.js"></script>
 	<script>
-		new LittleModal(".modal");
+		new LittleModal(".modal",{
+			scope: '.box',
+			wWidth: 300,
+			wHeight: 200
+		});
 	</script>
 </html>

@@ -35,3 +35,11 @@
 .little-modal-place .button-place {
   padding: 10px;
 }
+
+.box {
+  width: 600px;
+  height: 450px;
+  background-color: #f0a8a8;
+  margin: 0 auto;
+  margin-top: 50px;
+}
