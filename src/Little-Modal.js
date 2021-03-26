@@ -20,7 +20,7 @@ function getTemplate(o){
 export default class LittleModal {
 	constructor(element='body', o={}){
 		let $element = getTemplate(this.options)
-		this.scope = o.scope || false
+		this.scope = document.querySelector(o.scope) || false
 		this.tochX = 0
 		this.tochY = 0
 		this.valueX = 0
@@ -37,19 +37,31 @@ export default class LittleModal {
 		this.$title = $element.querySelector('.title')
 		this.$elBody = $element.querySelector('.body')
 		this.$bntPlace = $element.querySelector('.button-place')
-		this.$element.style.maxWidth = `${this.maxWidth}px`
-		this.$element.style.maxHeight = `${this.maxHeight}px`;
+		this.$element.style.width = `${this.maxWidth}px`
+		this.$element.style.height = `${this.maxHeight}px`;
 		document.querySelector(element) ? 
 		document.querySelector(element).appendChild($element) : 
 		document.body.insertAdjacentElement('afterbegin', $element);
+		if(this.scope){
+			this.scope.style.position = 'relative';
+		}
 		
 		this.init();
 	}
 
 	init() {
-		let left = 0
-		let top = 0
 
+		this.calculate();
+
+		['mouseDownHandler', 'mouseUpHandler', 'mouseMoveHandler', 'onResize'].forEach( element => this[element] = this[element].bind(this))
+		resize.add(this.onResize)
+		this.$title.addEventListener('mousedown', this.mouseDownHandler);
+		
+	}
+
+	calculate() {
+		this.tochX = 0
+		this.tochY = 0
 		this.elementWidth = this.$element.offsetWidth
 		this.elementHeight = this.$element.offsetHeight
 		this.windowWidth = window.innerWidth
@@ -59,37 +71,34 @@ export default class LittleModal {
 
 		//если есть внешние рамки то берем их
 		if(this.scope) {
-			let $scope = document.querySelector(this.scope).getBoundingClientRect()
-			left = $scope.left
-			top = $scope.top
-			this.borderXMin = left
-			this.borderXMax = $scope.right
-			this.borderYMin = top
-			this.borderYMax = $scope.bottom
-			this.windowWidth = $scope.right
-			this.windowHeight = $scope.bottom
-			
-			this.valueX = this.borderXMin
-			this.valueY = this.borderYMin;
+			let scope = this.scope.getBoundingClientRect()
+			this.borderXMin = scope.left
+			this.borderXMax = scope.right
+			this.borderYMin = scope.top
+			this.borderYMax = scope.bottom
+			this.windowWidth = scope.width
+			this.windowHeight = scope.height
 		}
 
 		this.limitWidth = this.windowWidth - this.elementWidth;
 		this.limitHeight = this.windowHeight - this.elementHeight;
-
-		['mouseDownHandler', 'mouseUpHandler', 'mouseMoveHandler', 'onResize'].forEach( element => this[element] = this[element].bind(this))
-		resize.add(this.onResize)
-		this.$title.addEventListener('mousedown', this.mouseDownHandler);
-		this.setPosition(left, top)
+		console.log(this.valueX, this.valueY)
+		this.setPosition(this.valueX, this.valueY)
 	}
 
 	onResize(e) {
-		console.log(this.valueX)
+		this.calculate();
 	}
 
 	mouseDownHandler(e) {
-
 		this.tochX = e.clientX - this.$element.getBoundingClientRect().left
 		this.tochY = e.clientY - this.$element.getBoundingClientRect().top
+
+		if(this.scope){
+			let scope = this.scope.getBoundingClientRect()
+			this.tochX = e.clientX - this.$element.getBoundingClientRect().left + scope.left
+			this.tochY = e.clientY - this.$element.getBoundingClientRect().top + scope.top
+		}
 
 		document.addEventListener('mouseup', this.mouseUpHandler)
 		document.addEventListener('mousemove', this.mouseMoveHandler);
@@ -115,16 +124,16 @@ export default class LittleModal {
 	  this.valueX = x - this.tochX
 	  this.valueY = y - this.tochY
 			
-		this.valueX = this.valueX > this.borderXMin ? this.valueX : this.borderXMin
+		this.valueX = this.valueX > 0 ? this.valueX : 0
   	this.valueX = this.valueX > this.limitWidth ? this.limitWidth : this.valueX
 
-  	this.valueY = this.valueY > this.borderYMin ? this.valueY : this.borderYMin
+  	this.valueY = this.valueY > 0 ? this.valueY : 0
   	this.valueY = this.valueY > this.limitHeight ? this.limitHeight : this.valueY
 
-  	this.valueX = x > minX ? this.valueX : this.borderXMin
+  	this.valueX = x > minX ? this.valueX : 0
   	this.valueX = x > maxX ? this.limitWidth : this.valueX
 
-  	this.valueY = y > minY ? this.valueY : this.borderYMin
+  	this.valueY = y > minY ? this.valueY : 0
   	this.valueY = y > maxY ? this.limitHeight : this.valueY
 
     this.$element.style.left = this.valueX + 'px'
