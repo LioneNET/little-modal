@@ -2,13 +2,17 @@ import resize from './Resize.js'
 
 function getTemplate(o){
 	let $modal = document.createElement('div')
-	$modal.classList.add('little-modal-place')
+	$modal.classList.add('little-modal')
 	$modal.insertAdjacentHTML('afterbegin',`
-			<div class="title">Little modal</div>
-			<div class="body">
-				<div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime a explicabo consectetur vitae ex eaque animi blanditiis quidem magnam corrupti incidunt sit amet, dolore nemo numquam quis! Nobis, dolor, laudantium.</div>
+			<div class="little-modal-title">Little modal</div>
+			<div class="little-modal-body">
+				<div class="inner-place">
+					<div class="wrap">
+						Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime a explicabo consectetur vitae ex eaque animi blanditiis quidem magnam corrupti incidunt sit amet, dolore nemo numquam quis! Nobis, dolor, laudantium.
+					</div>
+				</div>
 			</div>
-			<div class="button-place">
+			<div class="little-modal-button-place">
 				<button data-type="OK">Ok</button>
 				<button data-type="CANSEL">Cansel</button>
 			</div>
@@ -23,22 +27,23 @@ export default class LittleModal {
 		this.scope = document.querySelector(o.scope) || false
 		this.tochX = 0
 		this.tochY = 0
-		this.valueX = 0
-		this.valueY = 0
+		this.valueX = 0//Math.round(Math.random()*1000)
+		this.valueY = 0//Math.round(Math.random()*1000)
 		this.borderXMin = 0
 		this.borderXMax = 0
 		this.borderYMin = 0
 		this.borderYMax = 0
-		this.maxWidth = o.wWidth || 500
-		this.maxHeight = o.wHeight || 300
+		this.maxWidth = o.wWidth || 300
+		this.maxHeight = o.wHeight || 150
 		this.options = o
 		this.$body = document.querySelector('body')
 		this.$element = $element
-		this.$title = $element.querySelector('.title')
-		this.$elBody = $element.querySelector('.body')
-		this.$bntPlace = $element.querySelector('.button-place')
-		this.$element.style.width = `${this.maxWidth}px`
-		this.$element.style.height = `${this.maxHeight}px`;
+		this.$elTitle = $element.querySelector('.little-modal-title')
+		this.$elBody = $element.querySelector('.little-modal-body')
+		this.$elInner = $element.querySelector('.little-modal .inner-place')
+		this.$elBtnPlace = $element.querySelector('.little-modal-button-place')
+		this.$element.style.width = this.maxWidth === "auto" ? "auto" : this.maxWidth+'px'
+		this.$element.style.height = this.maxHeight === "auto" ? "auto" : this.maxHeight+'px';
 		document.querySelector(element) ? 
 		document.querySelector(element).appendChild($element) : 
 		document.body.insertAdjacentElement('afterbegin', $element);
@@ -50,13 +55,28 @@ export default class LittleModal {
 	}
 
 	init() {
+		
+		let padding = 3;
+		let hElement = this.$element.getBoundingClientRect().height
+		let hTitle = this.$elTitle.getBoundingClientRect().height
+		let hInner = this.$elInner.getBoundingClientRect().height
+		let hBtnPlace = this.$elBtnPlace.getBoundingClientRect().height
+		let height = hElement - hTitle - hBtnPlace - padding * 2
 
-		this.calculate();
+		this.$elInner.style.padding = padding+'px'
+
+		if(height > 30){
+			this.$elInner.style.height = height+'px';
+		} else {
+			this.$element.style.height = "auto"
+			this.maxHeight = this.$element.getBoundingClientRect().height
+			console.log('height to small')
+		}
 
 		['mouseDownHandler', 'mouseUpHandler', 'mouseMoveHandler', 'onResize'].forEach( element => this[element] = this[element].bind(this))
 		resize.add(this.onResize)
-		this.$title.addEventListener('mousedown', this.mouseDownHandler);
-		
+		this.$elTitle.addEventListener('mousedown', this.mouseDownHandler);
+		this.calculate()
 	}
 
 	calculate() {
@@ -82,7 +102,6 @@ export default class LittleModal {
 
 		this.limitWidth = this.windowWidth - this.elementWidth;
 		this.limitHeight = this.windowHeight - this.elementHeight;
-		console.log(this.valueX, this.valueY)
 		this.setPosition(this.valueX, this.valueY)
 	}
 

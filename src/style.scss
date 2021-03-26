@@ -12,17 +12,17 @@
   user-select: none;
 }
 
-.little-modal-place {
+.little-modal {
+  $radius: 5px;
+  position: absolute;
   background-color: #f7f7f7;
   border: 1px solid #b3b3b3;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  position: absolute;
   top: 0px;
   left: 0px;
-  $radius: 5px;
 
-  .title {
+  &-title {
     padding: 10px;
     background-color: #dadada;
     border-top-left-radius: $radius;
@@ -32,11 +32,16 @@
     @extend %selected-none;
 	}
 
-	.body {
-    padding: 5px;
+	&-body {
+    overflow: hidden;
+    overflow-y: auto;
+
+    .inner-place {
+
+    }
 	}
 
-	.button-place {
+	&-button-place {
     padding: 10px;
 	}
 }

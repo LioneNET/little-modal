@@ -3,7 +3,7 @@
   padding: 0px;
 }
 
-.little-modal-place .title {
+.little-modal-title {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -12,16 +12,16 @@
   user-select: none;
 }
 
-.little-modal-place {
+.little-modal {
+  position: absolute;
   background-color: #f7f7f7;
   border: 1px solid #b3b3b3;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  position: absolute;
   top: 0px;
   left: 0px;
 }
-.little-modal-place .title {
+.little-modal-title {
   padding: 10px;
   background-color: #dadada;
   border-top-left-radius: 5px;
@@ -29,10 +29,11 @@
   font-size: 16px;
   font-weight: bold;
 }
-.little-modal-place .body {
-  padding: 5px;
+.little-modal-body {
+  overflow: hidden;
+  overflow-y: auto;
 }
-.little-modal-place .button-place {
+.little-modal-button-place {
   padding: 10px;
 }
 
