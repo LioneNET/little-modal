@@ -18,6 +18,7 @@ module.exports = {
       filename: "style.css"
     })
   ],
+  target: ['es5'],
   module: {
     rules: [
       {
@@ -27,10 +28,11 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: ['@babel/preset-env'],
-            plugins: [
+            /*plugins: [
               ["@babel/plugin-proposal-private-methods"],
-              ["@babel/plugin-proposal-class-properties"]
-            ]
+              ["@babel/plugin-proposal-class-properties"],
+              ["@babel/plugin-transform-arrow-functions"]
+            ]*/
           }
         }
       },

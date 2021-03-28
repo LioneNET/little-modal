@@ -25,9 +25,9 @@
 	<script type="text/javascript" src="dist/littlemodal.js"></script>
 	<script>
 
-    let modal1 = littlemodal.init()
+    var modal1 = littlemodal.init()
 
-    let modal2 = littlemodal.init({
+    var modal2 = littlemodal.init({
     	target: '.modal',
 			scope: '.box',
 			inner: 'hello',
@@ -39,7 +39,7 @@
     modal2.open({
     	wWidth: 350,
     	title: 'modal',
-    	inner: `<h1>Hello world</h1>`,
+    	inner: '<h1>Hello world</h1>',
     	OK: 'OK',
     	CANSEL: 'Закрыть',
 
