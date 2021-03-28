@@ -6,7 +6,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "littlemodal.js",
-    //library: "$",
+    library: "littlemodal",
+    libraryExport: 'default',
     libraryTarget: "umd",
   },
   optimization: {

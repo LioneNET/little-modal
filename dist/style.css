@@ -29,11 +29,22 @@
   font-size: 16px;
   font-weight: bold;
 }
+.little-modal-title button {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  right: 8px;
+  top: 7px;
+}
+.little-modal-title button:focus {
+  outline: none;
+}
 .little-modal-body {
   overflow: hidden;
   overflow-y: auto;
 }
 .little-modal-button-place {
+  display: none;
   padding: 10px;
 }
 

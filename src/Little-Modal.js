@@ -1,20 +1,20 @@
-import resize from './Resize.js'
+//import resize from './Resize.js'
 
 function getTemplate(o){
 	let $modal = document.createElement('div')
 	$modal.classList.add('little-modal')
 	$modal.insertAdjacentHTML('afterbegin',`
-			<div class="little-modal-title">Little modal</div>
+			<div class="little-modal-title">${o.title} <button>&#120;</button></div>
 			<div class="little-modal-body">
 				<div class="inner-place">
 					<div class="wrap">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime a explicabo consectetur vitae ex eaque animi blanditiis quidem magnam corrupti incidunt sit amet, dolore nemo numquam quis! Nobis, dolor, laudantium.
+						${o.inner}
 					</div>
 				</div>
 			</div>
-			<div class="little-modal-button-place">
-				<button data-type="OK">Ok</button>
-				<button data-type="CANSEL">Cansel</button>
+			<div class="little-modal-button-place" ${o.OK || o.CANSEL ? "style='display: block;'" : ''}>
+				${o.OK ? `<button data-type="OK">${o.OK}</button>` : ''}
+				${o.CANSEL ? `<button data-type="CANSEL">${o.CANSEL}</button>` : ''}
 			</div>
 		`);
 	return $modal;
@@ -22,40 +22,57 @@ function getTemplate(o){
 
 
 export default class LittleModal {
-	constructor(element='body', o={}){
-		let $element = getTemplate(this.options)
+	constructor(o={}){
+
+		this.options = {}
+		this.options.inner = o.inner ?? ''
+		this.options.title = o.title ?? 'Little modal'
+		this.options.OK = o.OK ?? false
+		this.options.CANSEL = o.CANSEL ?? false
+		this.options.wWidth = o.wWidth ?? 300
+		this.options.wHeight = o.wHeight ?? 150
+
+		this.$element = null
+		this.target = o.target ?? "body"
 		this.scope = document.querySelector(o.scope) || false
 		this.tochX = 0
 		this.tochY = 0
-		this.valueX = 0//Math.round(Math.random()*1000)
-		this.valueY = 0//Math.round(Math.random()*1000)
+		this.valueX = 0 //Math.round(Math.random()*1000)
+		this.valueY = 0 //Math.round(Math.random()*1000)
 		this.borderXMin = 0
 		this.borderXMax = 0
 		this.borderYMin = 0
 		this.borderYMax = 0
-		this.maxWidth = o.wWidth || 300
-		this.maxHeight = o.wHeight || 150
-		this.options = o
 		this.$body = document.querySelector('body')
-		this.$element = $element
-		this.$elTitle = $element.querySelector('.little-modal-title')
-		this.$elBody = $element.querySelector('.little-modal-body')
-		this.$elInner = $element.querySelector('.little-modal .inner-place')
-		this.$elBtnPlace = $element.querySelector('.little-modal-button-place')
-		this.$element.style.width = this.maxWidth === "auto" ? "auto" : this.maxWidth+'px'
-		this.$element.style.height = this.maxHeight === "auto" ? "auto" : this.maxHeight+'px';
-		document.querySelector(element) ? 
-		document.querySelector(element).appendChild($element) : 
-		document.body.insertAdjacentElement('afterbegin', $element);
+
 		if(this.scope){
 			this.scope.style.position = 'relative';
 		}
-		
-		this.init();
+
 	}
 
 	init() {
-		
+		//если элемент есть, не инициализируем
+		if(this.$element !== null){
+			return;
+		}
+
+		let $element = this.$element ?? getTemplate(this.options)
+		let maxWidth = this.options.wWidth
+		let maxHeight = this.options.wHeight
+		this.$element = $element
+		this.$elTitle = $element.querySelector('.little-modal-title')
+		this.$elClose = this.$elTitle.querySelector('button')
+		this.$elBody = $element.querySelector('.little-modal-body')
+		this.$elInner = $element.querySelector('.little-modal .inner-place')
+		this.$elBtnPlace = $element.querySelector('.little-modal-button-place')
+		this.$element.style.width = maxWidth === "auto" ? "auto" : maxWidth+'px'
+		this.$element.style.height = maxHeight === "auto" ? "auto" : maxHeight+'px';
+
+		document.querySelector(this.target) ? 
+		document.querySelector(this.target).appendChild(this.$element) : 
+		document.body.insertAdjacentElement('afterbegin', this.$element);
+
 		let padding = 3;
 		let hElement = this.$element.getBoundingClientRect().height
 		let hTitle = this.$elTitle.getBoundingClientRect().height
@@ -73,12 +90,18 @@ export default class LittleModal {
 			console.log('height to small')
 		}
 
-		['mouseDownHandler', 'mouseUpHandler', 'mouseMoveHandler', 'onResize'].forEach( element => this[element] = this[element].bind(this))
-		resize.add(this.onResize)
+		['mouseDownHandler', 'mouseUpHandler', 'onButton',
+		 'mouseMoveHandler', 'onResize', 'onClose'].forEach( element => this[element] = this[element].bind(this));
+
+
+		window.addEventListener('resize', this.onResize)
+		this.$elClose.addEventListener('click', this.onClose)
+		this.$elBtnPlace.addEventListener('click', this.onButton)
 		this.$elTitle.addEventListener('mousedown', this.mouseDownHandler);
 		this.calculate()
 	}
 
+	//пересчет переменых
 	calculate() {
 		this.tochX = 0
 		this.tochY = 0
@@ -103,6 +126,64 @@ export default class LittleModal {
 		this.limitWidth = this.windowWidth - this.elementWidth;
 		this.limitHeight = this.windowHeight - this.elementHeight;
 		this.setPosition(this.valueX, this.valueY)
+	}
+
+	//для обертки открыть
+	open(params) {
+		console.log(params)
+		for(let key in params){
+			if(this.options[key] !== 'undefined'){
+				this.options[key] = params[key]
+			}
+		}
+		this.init()
+	}
+
+	//для обертки закрыть
+	close() {
+		if(this.$element !== null)
+			this.destroy()
+	}
+
+	//двигаем окно
+	setPosition(x, y) {
+		let minX = this.tochX
+		let maxX = this.windowWidth - this.elementWidth + this.tochX
+		let minY = this.tochY
+		let maxY = this.windowHeight - this.elementHeight + this.tochY
+
+	  this.valueX = x - this.tochX
+	  this.valueY = y - this.tochY
+			
+		this.valueX = this.valueX > 0 ? this.valueX : 0
+  	this.valueX = this.valueX > this.limitWidth ? this.limitWidth : this.valueX
+
+  	this.valueY = this.valueY > 0 ? this.valueY : 0
+  	this.valueY = this.valueY > this.limitHeight ? this.limitHeight : this.valueY
+
+  	this.valueX = x > minX ? this.valueX : 0
+  	this.valueX = x > maxX ? this.limitWidth : this.valueX
+
+  	this.valueY = y > minY ? this.valueY : 0
+  	this.valueY = y > maxY ? this.limitHeight : this.valueY
+
+    this.$element.style.left = this.valueX + 'px'
+  	this.$element.style.top = this.valueY + 'px'
+	}
+
+	onClose(e) {
+		this.close()
+	}
+
+	onButton(e) {
+		switch(e.target.getAttribute('data-type')) {
+			case 'OK':
+				this.options.onOk && this.options.onOk.call(this.options, e)
+				break;
+			case 'CANSEL':
+				this.options.onCansel && this.options.onCansel.call(this.options, e)
+				break;
+		}
 	}
 
 	onResize(e) {
@@ -134,29 +215,13 @@ export default class LittleModal {
 		}
 	}
 
-	setPosition(x, y) {
-		let minX = this.tochX
-		let maxX = this.windowWidth - this.elementWidth + this.tochX
-		let minY = this.tochY
-		let maxY = this.windowHeight - this.elementHeight + this.tochY
-
-	  this.valueX = x - this.tochX
-	  this.valueY = y - this.tochY
-			
-		this.valueX = this.valueX > 0 ? this.valueX : 0
-  	this.valueX = this.valueX > this.limitWidth ? this.limitWidth : this.valueX
-
-  	this.valueY = this.valueY > 0 ? this.valueY : 0
-  	this.valueY = this.valueY > this.limitHeight ? this.limitHeight : this.valueY
-
-  	this.valueX = x > minX ? this.valueX : 0
-  	this.valueX = x > maxX ? this.limitWidth : this.valueX
-
-  	this.valueY = y > minY ? this.valueY : 0
-  	this.valueY = y > maxY ? this.limitHeight : this.valueY
-
-    this.$element.style.left = this.valueX + 'px'
-  	this.$element.style.top = this.valueY + 'px'
+	destroy() {
+		this.$elClose.removeEventListener('onclick', this.onClose)
+		window.removeEventListener('resize', this.onResize)
+		this.$elTitle.removeEventListener('mousedown', this.mouseDownHandler)
+		this.$elBtnPlace.removeEventListener('click', this.onButton)
+		this.$element.parentNode.removeChild(this.$element)
+		this.$element = null
 	}
 
 }

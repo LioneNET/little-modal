@@ -30,6 +30,19 @@
     font-size: 16px;
     font-weight: bold;
     @extend %selected-none;
+
+    button {
+      width: 25px;
+      height: 25px;
+      position: absolute;
+      right: 8px;
+      top: 7px;
+
+      &:focus {
+        outline: none;
+      }
+      
+    }
 	}
 
 	&-body {
@@ -42,6 +55,7 @@
 	}
 
 	&-button-place {
+    display: none;
     padding: 10px;
 	}
 }
