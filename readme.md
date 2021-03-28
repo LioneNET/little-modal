@@ -1,53 +1,94 @@
 # LittleModal
 
-## Usage
+Простое модальное окно, с возможностью перетаскивания
+
+## Как использовать
 
 ```html
 
-<div class="modal"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="dist/style.css">
+</head>
+<body>
+	<div class="box">
+		<div class="modal"></div>
+	</div>
+
+	
+</body>
+	<script type="text/javascript" src="dist/littlemodal.js"></script>
+</html>
 
 ```
 
 ```js
 
-// single, options via js 
-new LittleModal.create(document.getElementById('slider1'), {min:0, max: 1, value: 0.5, step: 0.1})
+// Стандартные опции
+    let modal1 = littlemodal.init()
 
-// or single, options via html attributes 
-rangesliderJs.create(document.getElementById('slider2'))
+    let modal2 = littlemodal.init({
+    	target: '.modal',
+			scope: '.box',
+			inner: 'hello',
+		  wWidth: 350,
+			wHeight: 170
+		})
 
-// or initialize multiple
-rangesliderJs.create(document.querySelectorAll('input[type="range"]'))
+    modal1.open()
+    modal2.open({
+    	title: 'modal',
+    	inner: `<h1>Hello world</h1>`,
+    	OK: 'ok',
+    	CANSEL: 'cansel',
+
+    	onOk: function(e){
+    		console.log(this)
+    	},
+
+    	onCansel: function(e){
+    		console.log(this)
+    		modal2.close()
+    	}
+    })
 ```
 
-### Options
+### Опции
 
 ```js
-{
-    min: 0,
-    max: 100,
-    value: 50,
-    step: 1,
-    // callbacks
-    onInit: (value, percent, position) => {},
-    onSlideStart: (value, percent, position) => {},
-    onSlide: (value, percent, position) => {},
-    onSlideEnd: (value, percent, position) => {}
+let options = {
+		//заголовок
+    title: 'String',
+    //
+    inner: 'String',
+    //
+    OK: 'String',
+    //
+    CANSEL: 'String',
 }
 ```
 
-### Events
+### Методы 
+
+Инициализация
+- ``init()``
+
+Открыть окно
+- ``open()``
+
+Закрыть окно
+- ``close()``
+
+### События
+
+Происходит, кода нажата кнопка OK
+- ``onOk``
+
+Происходит когда нажата кнопка CANSEL
+- ``onCansel``
 
 
-
-## Contribute or Report Issue
-
-Pull requests should target the **develop** branch.
-
-For bugs and feature requests, [please create an issue][10].
-
-[10]: https://github.com/stbaer/rangeslider-js/issues
-
-## Licence
-
-MIT, see [LICENSE.md](http://github.com/stbaer/rangeslider-js/blob/master/LICENSE.md) for details.
