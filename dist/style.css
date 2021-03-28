@@ -1,1 +1,49 @@
-*{margin:0px;padding:0px}.little-modal-title{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.little-modal{position:absolute;background-color:#f7f7f7;border:1px solid #b3b3b3;border-top-left-radius:5px;border-top-right-radius:5px;top:0px;left:0px}.little-modal-title{padding:10px;background-color:#dadada;border-top-left-radius:5px;border-top-right-radius:5px;font-size:16px;font-weight:bold}.little-modal-title button{width:25px;height:25px;position:absolute;right:8px;top:7px}.little-modal-title button:focus{outline:none}.little-modal-body{overflow:hidden;overflow-y:auto}.little-modal-button-place{display:none;padding:10px}
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+.little-modal-title {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.little-modal {
+  position: absolute;
+  background-color: #f7f7f7;
+  border: 1px solid #b3b3b3;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  top: 0px;
+  left: 0px;
+}
+.little-modal-title {
+  padding: 10px;
+  background-color: #dadada;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.little-modal-title button {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  right: 8px;
+  top: 7px;
+}
+.little-modal-title button:focus {
+  outline: none;
+}
+.little-modal-body {
+  overflow: hidden;
+  overflow-y: auto;
+}
+.little-modal-button-place {
+  display: none;
+  padding: 10px;
+}
