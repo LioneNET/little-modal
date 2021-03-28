@@ -4,8 +4,11 @@ function getTemplate(o){
 	let $modal = document.createElement('div')
 	$modal.classList.add('little-modal')
 	$modal.insertAdjacentHTML('afterbegin',`
-			<div class="little-modal-title">${o.title} <button>&#120;</button></div>
+			<div class="little-modal-title" data-type="title">${o.title} <button>&#120;</button></div>
 			<div class="little-modal-body">
+				<div class="dLeft" data-type="left"></div>
+				<div class="dBottom" data-type="bottom"></div>
+				<div class="dRight" data-type="right"></div>
 				<div class="inner-place">
 					<div class="wrap">
 						${o.inner}
@@ -64,6 +67,9 @@ export default class LittleModal {
 		this.$elTitle = $element.querySelector('.little-modal-title')
 		this.$elClose = this.$elTitle.querySelector('button')
 		this.$elBody = $element.querySelector('.little-modal-body')
+		this.$elDragLeft = $element.querySelector('.dLeft')
+		this.$elDragBottom = $element.querySelector('.dBottom')
+		this.$elDragRight = $element.querySelector('.dRight')
 		this.$elInner = $element.querySelector('.little-modal .inner-place')
 		this.$elBtnPlace = $element.querySelector('.little-modal-button-place')
 		this.$element.style.width = maxWidth === "auto" ? "auto" : maxWidth+'px'
@@ -90,14 +96,19 @@ export default class LittleModal {
 			console.log('height to small')
 		}
 
-		['mouseDownHandler', 'mouseUpHandler', 'onButton',
-		 'mouseMoveHandler', 'onResize', 'onClose'].forEach( element => this[element] = this[element].bind(this));
+		['downDragLeftHandler', 'downDragBottomHandler', 'downDragRightHandler',
+		'mouseMoveDragLeftHandler', 'mouseMoveDragBottomHandler', 'mouseMoveDragRightHandler',
+		'mouseDownHandler', 'mouseUpHandler', 'onButton',
+		'mouseMoveHandler', 'onResize', 'onClose'].forEach( element => this[element] = this[element].bind(this));
 
 
 		window.addEventListener('resize', this.onResize)
 		this.$elClose.addEventListener('click', this.onClose)
 		this.$elBtnPlace.addEventListener('click', this.onButton)
 		this.$elTitle.addEventListener('mousedown', this.mouseDownHandler);
+		this.$elDragLeft.addEventListener('mousedown', this.downDragLeftHandler);
+		this.$elDragBottom.addEventListener('mousedown', this.downDragBottomHandler);
+		this.$elDragRight.addEventListener('mousedown', this.downDragRightHandler);
 		this.calculate()
 	}
 
@@ -190,6 +201,39 @@ export default class LittleModal {
 		this.calculate();
 	}
 
+	downDragLeftHandler(e) {
+		console.log('downDragLeftHandler')
+		this.mouseUpHandler(e);
+		document.addEventListener('mousemove', this.mouseMoveDragLeftHandler);
+		document.addEventListener('mouseup', this.mouseUpHandler)
+	}
+
+	downDragBottomHandler(e) {
+		console.log('downDragBottomHandler')
+		this.mouseUpHandler(e);
+		document.addEventListener('mousemove', this.mouseMoveDragBottomHandler);
+		document.addEventListener('mouseup', this.mouseUpHandler)
+	}
+
+	downDragRightHandler(e) {
+		console.log('downDragRightHandler')
+		this.mouseUpHandler(e);
+		document.addEventListener('mousemove', this.mouseMoveDragRightHandler);
+		document.addEventListener('mouseup', this.mouseUpHandler)
+	}
+
+	mouseMoveDragLeftHandler(e) {
+		console.log('left')
+	}
+
+	mouseMoveDragBottomHandler(e) {
+		console.log('bottom')
+	}
+
+	mouseMoveDragRightHandler(e) {
+		console.log('right')
+	}
+
 	mouseDownHandler(e) {
 		this.tochX = e.clientX - this.$element.getBoundingClientRect().left
 		this.tochY = e.clientY - this.$element.getBoundingClientRect().top
@@ -207,12 +251,15 @@ export default class LittleModal {
 	mouseUpHandler(e) {
 		document.removeEventListener('mousemove', this.mouseMoveHandler)
 		document.removeEventListener('mouseup', this.mouseUpHandler);
+		document.removeEventListener('mousemove', this.mouseMoveDragLeftHandler);
+		document.removeEventListener('mousemove', this.mouseMoveDragBottomHandler);
+		document.removeEventListener('mousemove', this.mouseMoveDragRightHandler);
 	}
 
 	mouseMoveHandler(e) {
 		if(e.clientX > this.borderXMin && e.clientX < this.borderXMax && e.clientY > this.borderYMin && e.clientY < this.borderYMax) {
 			this.setPosition(e.clientX, e.clientY);
-		}
+		} 
 	}
 
 	destroy() {

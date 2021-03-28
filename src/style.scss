@@ -29,6 +29,7 @@
     border-top-right-radius: $radius;
     font-size: 16px;
     font-weight: bold;
+    height: 20px;
     @extend %selected-none;
 
     button {
@@ -51,6 +52,35 @@
 
     .inner-place {
 
+    }
+
+    .dLeft, .dBottom, .dRight {
+      z-index: 99;
+      display: block;
+      background-color: #f00;
+      position: absolute;
+      @extend %selected-none;
+    }
+
+    .dLeft {
+      width: 10px;
+      left: 0;
+      top: 40px;
+      bottom: 10px;
+    }
+
+    .dBottom {
+      height: 10px;
+      bottom: 0;
+      left: 10px;
+      right: 10px;
+    }
+
+    .dRight {
+      width: 10px;
+      right: 0;
+      top: 40px;
+      bottom: 10px;
     }
 	}
 

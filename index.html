@@ -24,7 +24,14 @@
 </body>
 	<script type="text/javascript" src="dist/littlemodal.js"></script>
 	<script>
-
+		littlemodal.init({
+    	target: '.modal',
+			scope: '.box',
+			inner: 'hello',
+		  wWidth: 350,
+			wHeight: 170
+		}).open();
+		/*
     var modal1 = littlemodal.init()
 
     var modal2 = littlemodal.init({
@@ -51,6 +58,6 @@
     		console.log(this)
     		modal2.close()
     	}
-    })
+    })*/
 	</script>
 </html>
