@@ -203,6 +203,7 @@ export default class LittleModal {
 
 	downDragLeftHandler(e) {
 		console.log('downDragLeftHandler')
+		this.dragX = e.clientX;
 		this.mouseUpHandler(e);
 		document.addEventListener('mousemove', this.mouseMoveDragLeftHandler);
 		document.addEventListener('mouseup', this.mouseUpHandler)
@@ -210,6 +211,7 @@ export default class LittleModal {
 
 	downDragBottomHandler(e) {
 		console.log('downDragBottomHandler')
+		this.dragY = e.clientY;
 		this.mouseUpHandler(e);
 		document.addEventListener('mousemove', this.mouseMoveDragBottomHandler);
 		document.addEventListener('mouseup', this.mouseUpHandler)
@@ -217,6 +219,7 @@ export default class LittleModal {
 
 	downDragRightHandler(e) {
 		console.log('downDragRightHandler')
+		this.dragX = e.clientX;
 		this.mouseUpHandler(e);
 		document.addEventListener('mousemove', this.mouseMoveDragRightHandler);
 		document.addEventListener('mouseup', this.mouseUpHandler)
@@ -224,14 +227,34 @@ export default class LittleModal {
 
 	mouseMoveDragLeftHandler(e) {
 		console.log('left')
+		if(this.limits(e.clientX, e.clientY)) {
+			let x = this.dragX - e.clientX;
+			this.dragX = e.clientX;
+			this.valueX = this.valueX-x;
+			this.elementWidth = this.elementWidth+x;
+			this.$element.style.width = this.elementWidth + 'px'
+			this.$element.style.left = this.valueX + 'px'
+		}
 	}
 
 	mouseMoveDragBottomHandler(e) {
 		console.log('bottom')
+		if(this.limits(e.clientX, e.clientY)) {
+			let y = this.dragY - e.clientY;
+			this.dragY = e.clientY;
+			this.elementHeight = this.elementHeight-y;
+			this.$element.style.height = this.elementHeight + 'px'
+		}
 	}
 
 	mouseMoveDragRightHandler(e) {
 		console.log('right')
+		if(this.limits(e.clientX, e.clientY)) {
+			let x = this.dragX - e.clientX;
+			this.dragX = e.clientX;
+			this.elementWidth = this.elementWidth-x;
+			this.$element.style.width = this.elementWidth + 'px'
+		}
 	}
 
 	mouseDownHandler(e) {
@@ -254,12 +277,20 @@ export default class LittleModal {
 		document.removeEventListener('mousemove', this.mouseMoveDragLeftHandler);
 		document.removeEventListener('mousemove', this.mouseMoveDragBottomHandler);
 		document.removeEventListener('mousemove', this.mouseMoveDragRightHandler);
+		this.calculate();
 	}
 
 	mouseMoveHandler(e) {
-		if(e.clientX > this.borderXMin && e.clientX < this.borderXMax && e.clientY > this.borderYMin && e.clientY < this.borderYMax) {
-			this.setPosition(e.clientX, e.clientY);
-		} 
+		if(this.limits(e.clientX, e.clientY)) {
+			this.setPosition(e.clientX, e.clientY)
+		}
+	}
+
+	limits(x, y) {
+		if(x > this.borderXMin && x < this.borderXMax && y > this.borderYMin && y < this.borderYMax) {
+			return true
+		}
+		return false
 	}
 
 	destroy() {
