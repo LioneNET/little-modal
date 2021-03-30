@@ -228,12 +228,16 @@ export default class LittleModal {
 	mouseMoveDragLeftHandler(e) {
 		console.log('left')
 		if(this.limits(e.clientX, e.clientY)) {
-			let x = this.dragX - e.clientX;
-			this.dragX = e.clientX;
-			this.valueX = this.valueX-x;
+			let x = this.dragX - e.clientX
+			this.dragX = e.clientX
+			this.valueX = this.valueX-x
 			this.elementWidth = this.elementWidth+x;
-			this.$element.style.width = this.elementWidth + 'px'
-			this.$element.style.left = this.valueX + 'px'
+
+			if(this.valueX > -1 ) {
+				this.$element.style.width = this.elementWidth + 'px'
+				this.$element.style.left = this.valueX + 'px'
+			}
+
 		}
 	}
 
@@ -243,7 +247,10 @@ export default class LittleModal {
 			let y = this.dragY - e.clientY;
 			this.dragY = e.clientY;
 			this.elementHeight = this.elementHeight-y;
-			this.$element.style.height = this.elementHeight + 'px'
+
+			if(this.elementHeight + this.valueY <= this.windowHeight) {
+			 this.$element.style.height = this.elementHeight + 'px'
+			}
 		}
 	}
 
@@ -251,9 +258,13 @@ export default class LittleModal {
 		console.log('right')
 		if(this.limits(e.clientX, e.clientY)) {
 			let x = this.dragX - e.clientX;
+
 			this.dragX = e.clientX;
 			this.elementWidth = this.elementWidth-x;
-			this.$element.style.width = this.elementWidth + 'px'
+
+			if(this.elementWidth + this.valueX <= this.windowWidth) {
+			 this.$element.style.width = this.elementWidth + 'px'
+			}
 		}
 	}
 

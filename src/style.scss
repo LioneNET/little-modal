@@ -14,9 +14,9 @@
 
 .little-modal {
   $radius: 5px;
+  $colorBorder: #b3b3b3;;
   position: absolute;
   background-color: #f7f7f7;
-  border: 1px solid #b3b3b3;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   top: 0px;
@@ -30,6 +30,8 @@
     font-size: 16px;
     font-weight: bold;
     height: 20px;
+    border: 1px solid $colorBorder;
+    border-bottom: none;
     @extend %selected-none;
 
     button {
@@ -49,6 +51,8 @@
 	&-body {
     overflow: hidden;
     overflow-y: auto;
+    border: 1px solid $colorBorder;
+    border-top: none;
 
     .inner-place {
 
