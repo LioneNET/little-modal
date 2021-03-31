@@ -217,12 +217,16 @@ export default class LittleModal {
 		if(this.limits(pX, pY)) {
 			let x = this.dragX - pX
 			this.dragX = pX
-			this.valueX = this.valueX-x
-			this.cElementWidth = this.cElementWidth+x;
+			let xx = this.valueX
+			xx = xx - x;
+			//this.cElementWidth = this.cElementWidth+x;
+
+			this.setPosition(xx, this.valueY)
+			/*
 			if(this.valueX > -1 ) {
 				this.$element.style.width = this.elementWidth + 'px'
 				this.$element.style.left = this.valueX + 'px'
-			}
+			}*/
 
 		}
 	}
@@ -277,15 +281,6 @@ export default class LittleModal {
 	mouseDownHandler(e) {
 		this.dragX = e.clientX;
 		this.dragY = e.clientY;
-
-		this.tochX = e.clientX - this.$element.getBoundingClientRect().left
-		this.tochY = e.clientY - this.$element.getBoundingClientRect().top
-
-		if(this.scope){
-			let scope = this.scope.getBoundingClientRect()
-			this.tochX += scope.left
-			this.tochY += scope.top
-		}
 		
 		switch(e.target.getAttribute('data-type')) {
 			case 'left':
@@ -304,6 +299,14 @@ export default class LittleModal {
 				document.addEventListener('mousemove', this.mouseMoveDragCornerRightHandler);
 				break;
 			case 'title':
+				this.tochX = e.clientX - this.$element.getBoundingClientRect().left
+				this.tochY = e.clientY - this.$element.getBoundingClientRect().top
+
+				if(this.scope){
+					let scope = this.scope.getBoundingClientRect()
+					this.tochX += scope.left
+					this.tochY += scope.top
+				}
 				document.addEventListener('mousemove', this.mouseMoveHandler);
 				break;
 		}
