@@ -6,11 +6,13 @@ function getTemplate(o){
 	$modal.insertAdjacentHTML('afterbegin',`
 			<div class="little-modal-title" data-type="title">${o.title} <button>&#120;</button></div>
 			<div class="little-modal-body">
-				<div class="dLeft" data-type="left"></div>
-				<div class="dBottom" data-type="bottom"></div>
-				<div class="dRight" data-type="right"></div>
-				<div class="inner-place">
-					<div class="wrap">
+				<div class="wrap">
+					<div class="dLeft" data-type="left"></div>
+					<div class="dBottom" data-type="bottom"></div>
+					<div class="dRight" data-type="right"></div>
+					<div class="dCornerLeft" data-type="cornerLeft"></div>
+					<div class="dCornerRight" data-type="cornerRight"></div>
+					<div class="inner-place">
 						${o.inner}
 					</div>
 				</div>
@@ -46,12 +48,31 @@ export default class LittleModal {
 		this.borderXMax = 0
 		this.borderYMin = 0
 		this.borderYMax = 0
+		this.innerMinWidth = 250
+		this.innerMinHeight = 150
 		this.$body = document.querySelector('body')
 
 		if(this.scope){
 			this.scope.style.position = 'relative';
 		}
 
+	}
+
+	//вычисляемые свойства ширины окна
+	get cElementWidth() {
+		return this.elementWidth;
+	}
+	set cElementWidth(e) {
+		if(e > this.innerMinWidth)
+			this.elementWidth = e;
+	}
+
+	get cElementHeight() {
+		return this.elementHeight;
+	}
+	set cElementHeight(e) {
+		if(e > this.innerMinHeight)
+			this.elementHeight = e;
 	}
 
 	init() {
@@ -70,6 +91,8 @@ export default class LittleModal {
 		this.$elDragLeft = $element.querySelector('.dLeft')
 		this.$elDragBottom = $element.querySelector('.dBottom')
 		this.$elDragRight = $element.querySelector('.dRight')
+		this.$elDragCornerLeft = $element.querySelector('.dCornerLeft')
+		this.$elDragCornerRight = $element.querySelector('.dCornerRight')
 		this.$elInner = $element.querySelector('.little-modal .inner-place')
 		this.$elBtnPlace = $element.querySelector('.little-modal-button-place')
 		this.$element.style.width = maxWidth === "auto" ? "auto" : maxWidth+'px'
@@ -96,7 +119,9 @@ export default class LittleModal {
 			console.log('height to small')
 		}
 
-		['downDragLeftHandler', 'downDragBottomHandler', 'downDragRightHandler',
+		['mouseMoveDragCornerLeftHandler', 'mouseMoveDragCornerRightHandler',/*
+		'downCornerLeftHandler', 'downCornerRightHandler',
+		'downDragLeftHandler', 'downDragBottomHandler', 'downDragRightHandler',*/
 		'mouseMoveDragLeftHandler', 'mouseMoveDragBottomHandler', 'mouseMoveDragRightHandler',
 		'mouseDownHandler', 'mouseUpHandler', 'onButton',
 		'mouseMoveHandler', 'onResize', 'onClose'].forEach( element => this[element] = this[element].bind(this));
@@ -106,9 +131,11 @@ export default class LittleModal {
 		this.$elClose.addEventListener('click', this.onClose)
 		this.$elBtnPlace.addEventListener('click', this.onButton)
 		this.$elTitle.addEventListener('mousedown', this.mouseDownHandler);
-		this.$elDragLeft.addEventListener('mousedown', this.downDragLeftHandler);
-		this.$elDragBottom.addEventListener('mousedown', this.downDragBottomHandler);
-		this.$elDragRight.addEventListener('mousedown', this.downDragRightHandler);
+		this.$elDragLeft.addEventListener('mousedown', this.mouseDownHandler);
+		this.$elDragBottom.addEventListener('mousedown', this.mouseDownHandler);
+		this.$elDragRight.addEventListener('mousedown', this.mouseDownHandler);
+		this.$elDragCornerLeft.addEventListener('mousedown', this.mouseDownHandler);
+		this.$elDragCornerRight.addEventListener('mousedown', this.mouseDownHandler);
 		this.calculate()
 	}
 
@@ -122,6 +149,7 @@ export default class LittleModal {
 		this.windowHeight = window.innerHeight
 		this.borderXMax = this.windowWidth
 		this.borderYMax = this.windowHeight;
+		this.innerCor = this.$elInner.getBoundingClientRect().height;
 
 		//если есть внешние рамки то берем их
 		if(this.scope) {
@@ -137,6 +165,7 @@ export default class LittleModal {
 		this.limitWidth = this.windowWidth - this.elementWidth;
 		this.limitHeight = this.windowHeight - this.elementHeight;
 		this.setPosition(this.valueX, this.valueY)
+		console.log('calculating')
 	}
 
 	//для обертки открыть
@@ -182,6 +211,50 @@ export default class LittleModal {
   	this.$element.style.top = this.valueY + 'px'
 	}
 
+
+	moveDragLeft(pX, pY) {
+		//console.log('left')
+		if(this.limits(pX, pY)) {
+			let x = this.dragX - pX
+			this.dragX = pX
+			this.valueX = this.valueX-x
+			this.cElementWidth = this.cElementWidth+x;
+			if(this.valueX > -1 ) {
+				this.$element.style.width = this.elementWidth + 'px'
+				this.$element.style.left = this.valueX + 'px'
+			}
+
+		}
+	}
+	moveDragBottom(pX, pY) {
+		//console.log('bottom')
+		if(this.limits(pX, pY)) {
+			let y = this.dragY -pY;
+			this.dragY = pY;
+			this.cElementHeight = this.cElementHeight-y;
+
+			if(this.elementHeight + this.valueY <= this.windowHeight) {
+				console.log(this.elementHeight + this.valueY, this.windowHeight)
+				this.innerCor = this.innerCor-y
+				this.$elInner.style.height = this.innerCor + 'px'
+				this.$element.style.height = this.elementHeight + 'px'
+			}
+		}
+	}
+	moveDragRight(pX, pY) {
+		//console.log('right')
+		if(this.limits(pX, pY)) {
+			let x = this.dragX - pX;
+
+			this.dragX = pX;
+			this.cElementWidth = this.cElementWidth-x;
+
+			if(this.elementWidth + this.valueX <= this.windowWidth) {
+			 this.$element.style.width = this.elementWidth + 'px'
+			}
+		}
+	}
+	
 	onClose(e) {
 		this.close()
 	}
@@ -201,93 +274,75 @@ export default class LittleModal {
 		this.calculate();
 	}
 
-	downDragLeftHandler(e) {
-		console.log('downDragLeftHandler')
-		this.dragX = e.clientX;
-		this.mouseUpHandler(e);
-		document.addEventListener('mousemove', this.mouseMoveDragLeftHandler);
-		document.addEventListener('mouseup', this.mouseUpHandler)
-	}
-
-	downDragBottomHandler(e) {
-		console.log('downDragBottomHandler')
-		this.dragY = e.clientY;
-		this.mouseUpHandler(e);
-		document.addEventListener('mousemove', this.mouseMoveDragBottomHandler);
-		document.addEventListener('mouseup', this.mouseUpHandler)
-	}
-
-	downDragRightHandler(e) {
-		console.log('downDragRightHandler')
-		this.dragX = e.clientX;
-		this.mouseUpHandler(e);
-		document.addEventListener('mousemove', this.mouseMoveDragRightHandler);
-		document.addEventListener('mouseup', this.mouseUpHandler)
-	}
-
-	mouseMoveDragLeftHandler(e) {
-		console.log('left')
-		if(this.limits(e.clientX, e.clientY)) {
-			let x = this.dragX - e.clientX
-			this.dragX = e.clientX
-			this.valueX = this.valueX-x
-			this.elementWidth = this.elementWidth+x;
-
-			if(this.valueX > -1 ) {
-				this.$element.style.width = this.elementWidth + 'px'
-				this.$element.style.left = this.valueX + 'px'
-			}
-
-		}
-	}
-
-	mouseMoveDragBottomHandler(e) {
-		console.log('bottom')
-		if(this.limits(e.clientX, e.clientY)) {
-			let y = this.dragY - e.clientY;
-			this.dragY = e.clientY;
-			this.elementHeight = this.elementHeight-y;
-
-			if(this.elementHeight + this.valueY <= this.windowHeight) {
-			 this.$element.style.height = this.elementHeight + 'px'
-			}
-		}
-	}
-
-	mouseMoveDragRightHandler(e) {
-		console.log('right')
-		if(this.limits(e.clientX, e.clientY)) {
-			let x = this.dragX - e.clientX;
-
-			this.dragX = e.clientX;
-			this.elementWidth = this.elementWidth-x;
-
-			if(this.elementWidth + this.valueX <= this.windowWidth) {
-			 this.$element.style.width = this.elementWidth + 'px'
-			}
-		}
-	}
-
 	mouseDownHandler(e) {
+		this.dragX = e.clientX;
+		this.dragY = e.clientY;
+
 		this.tochX = e.clientX - this.$element.getBoundingClientRect().left
 		this.tochY = e.clientY - this.$element.getBoundingClientRect().top
 
 		if(this.scope){
 			let scope = this.scope.getBoundingClientRect()
-			this.tochX = e.clientX - this.$element.getBoundingClientRect().left + scope.left
-			this.tochY = e.clientY - this.$element.getBoundingClientRect().top + scope.top
+			this.tochX += scope.left
+			this.tochY += scope.top
 		}
-
+		
+		switch(e.target.getAttribute('data-type')) {
+			case 'left':
+				document.addEventListener('mousemove', this.mouseMoveDragLeftHandler);
+				break;
+			case 'bottom':
+				document.addEventListener('mousemove', this.mouseMoveDragBottomHandler);
+				break;
+			case 'right':
+				document.addEventListener('mousemove', this.mouseMoveDragRightHandler);
+				break;
+			case 'cornerLeft':
+				document.addEventListener('mousemove', this.mouseMoveDragCornerLeftHandler);
+				break;
+			case 'cornerRight':
+				document.addEventListener('mousemove', this.mouseMoveDragCornerRightHandler);
+				break;
+			case 'title':
+				document.addEventListener('mousemove', this.mouseMoveHandler);
+				break;
+		}
 		document.addEventListener('mouseup', this.mouseUpHandler)
-		document.addEventListener('mousemove', this.mouseMoveHandler);
+	}
+
+	mouseMoveDragCornerLeftHandler(e) {
+		this.moveDragLeft(e.clientX, e.clientY)
+		this.moveDragBottom(e.clientX, e.clientY)
+	}
+
+	mouseMoveDragCornerRightHandler(e) {
+		this.moveDragRight(e.clientX, e.clientY)
+		this.moveDragBottom(e.clientX, e.clientY)
+	}
+
+	mouseMoveDragLeftHandler(e) {
+		this.moveDragLeft(e.clientX, e.clientY)
+	}
+
+	mouseMoveDragBottomHandler(e) {
+		this.moveDragBottom(e.clientX, e.clientY)
+	}
+
+	mouseMoveDragRightHandler(e) {
+		this.moveDragRight(e.clientX, e.clientY)
 	}
 
 	mouseUpHandler(e) {
-		document.removeEventListener('mousemove', this.mouseMoveHandler)
-		document.removeEventListener('mouseup', this.mouseUpHandler);
-		document.removeEventListener('mousemove', this.mouseMoveDragLeftHandler);
-		document.removeEventListener('mousemove', this.mouseMoveDragBottomHandler);
-		document.removeEventListener('mousemove', this.mouseMoveDragRightHandler);
+		console.log('remove listeners')
+		document.removeEventListener('mousemove', this.mouseMoveHandler)	
+		document.removeEventListener('mousemove', this.downDragMouse)
+		document.removeEventListener('mousemove', this.mouseMoveDragLeftHandler)
+		document.removeEventListener('mousemove', this.mouseMoveDragBottomHandler)
+		document.removeEventListener('mousemove', this.mouseMoveDragRightHandler)
+		document.removeEventListener('mousemove', this.mouseMoveDragCornerLeftHandler)
+		document.removeEventListener('mousemove', this.mouseMoveDragCornerRightHandler)
+		document.removeEventListener('mouseup', this.mouseUpHandler)
+		document.removeEventListener('mousedown', this.mouseDownHandler)
 		this.calculate();
 	}
 

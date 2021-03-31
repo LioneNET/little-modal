@@ -13,6 +13,7 @@
 }
 
 .little-modal {
+  $corners: 5px;
   $radius: 5px;
   $colorBorder: #b3b3b3;;
   position: absolute;
@@ -58,33 +59,53 @@
 
     }
 
-    .dLeft, .dBottom, .dRight {
+    .dLeft, .dBottom, .dRight, .dCornerLeft, .dCornerRight {
       z-index: 99;
       display: block;
-      background-color: #f00;
+      background-color: transparent;
       position: absolute;
       @extend %selected-none;
     }
 
     .dLeft {
-      width: 10px;
+      width: $corners;
       left: 0;
       top: 40px;
       bottom: 10px;
+      cursor: e-resize;
     }
 
     .dBottom {
-      height: 10px;
+      height: $corners;
       bottom: 0;
       left: 10px;
       right: 10px;
+      cursor: n-resize;
     }
 
     .dRight {
-      width: 10px;
+      width: $corners;
       right: 0;
       top: 40px;
       bottom: 10px;
+      cursor: e-resize;
+    }
+
+    .dCornerLeft, .dCornerRight {
+      width: 10px;
+      height: 10px;
+      background-color: transparent;
+      bottom: 0px;
+    }
+
+    .dCornerLeft {
+      left: 0px;
+      cursor: sw-resize;
+    }
+
+    .dCornerRight {
+      right: 0px;
+      cursor: se-resize;
     }
 	}
 

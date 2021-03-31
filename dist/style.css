@@ -3,7 +3,7 @@
   padding: 0px;
 }
 
-.little-modal-body .dLeft, .little-modal-body .dBottom, .little-modal-body .dRight, .little-modal-title {
+.little-modal-body .dLeft, .little-modal-body .dBottom, .little-modal-body .dRight, .little-modal-body .dCornerLeft, .little-modal-body .dCornerRight, .little-modal-title {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -47,29 +47,46 @@
   border: 1px solid #b3b3b3;
   border-top: none;
 }
-.little-modal-body .dLeft, .little-modal-body .dBottom, .little-modal-body .dRight {
+.little-modal-body .dLeft, .little-modal-body .dBottom, .little-modal-body .dRight, .little-modal-body .dCornerLeft, .little-modal-body .dCornerRight {
   z-index: 99;
   display: block;
-  background-color: #f00;
+  background-color: transparent;
   position: absolute;
 }
 .little-modal-body .dLeft {
-  width: 10px;
+  width: 5px;
   left: 0;
   top: 40px;
   bottom: 10px;
+  cursor: e-resize;
 }
 .little-modal-body .dBottom {
-  height: 10px;
+  height: 5px;
   bottom: 0;
   left: 10px;
   right: 10px;
+  cursor: n-resize;
 }
 .little-modal-body .dRight {
-  width: 10px;
+  width: 5px;
   right: 0;
   top: 40px;
   bottom: 10px;
+  cursor: e-resize;
+}
+.little-modal-body .dCornerLeft, .little-modal-body .dCornerRight {
+  width: 10px;
+  height: 10px;
+  background-color: transparent;
+  bottom: 0px;
+}
+.little-modal-body .dCornerLeft {
+  left: 0px;
+  cursor: sw-resize;
+}
+.little-modal-body .dCornerRight {
+  right: 0px;
+  cursor: se-resize;
 }
 .little-modal-button-place {
   display: none;
