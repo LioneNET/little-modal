@@ -2,12 +2,17 @@
 
 function getTemplate(o){
 	let $modal = document.createElement('div')
-	$modal.classList.add('little-modal')
+	$modal.className = 'little-modal'
 	$modal.insertAdjacentHTML('afterbegin',`
-			<div class="little-modal-title">${o.title} <button>&#120;</button></div>
+			<div class="dLeft" data-type="left"></div>
+			<div class="dBottom" data-type="bottom"></div>
+			<div class="dRight" data-type="right"></div>
+			<div class="dCornerLeft" data-type="cornerLeft"></div>
+			<div class="dCornerRight" data-type="cornerRight"></div>
+			<div class="little-modal-title" data-type="title">${o.title} <button>&#120;</button></div>
 			<div class="little-modal-body">
-				<div class="inner-place">
-					<div class="wrap">
+				<div class="wrap">
+					<div class="inner-place">
 						${o.inner}
 					</div>
 				</div>
@@ -43,6 +48,8 @@ export default class LittleModal {
 		this.borderXMax = 0
 		this.borderYMin = 0
 		this.borderYMax = 0
+		this.innerMinWidth = 250
+		this.innerMinHeight = 150
 		this.$body = document.querySelector('body')
 
 		if(this.scope){
@@ -64,6 +71,11 @@ export default class LittleModal {
 		this.$elTitle = $element.querySelector('.little-modal-title')
 		this.$elClose = this.$elTitle.querySelector('button')
 		this.$elBody = $element.querySelector('.little-modal-body')
+		this.$elDragLeft = $element.querySelector('.dLeft')
+		this.$elDragBottom = $element.querySelector('.dBottom')
+		this.$elDragRight = $element.querySelector('.dRight')
+		this.$elDragCornerLeft = $element.querySelector('.dCornerLeft')
+		this.$elDragCornerRight = $element.querySelector('.dCornerRight')
 		this.$elInner = $element.querySelector('.little-modal .inner-place')
 		this.$elBtnPlace = $element.querySelector('.little-modal-button-place')
 		this.$element.style.width = maxWidth === "auto" ? "auto" : maxWidth+'px'
@@ -73,31 +85,22 @@ export default class LittleModal {
 		document.querySelector(this.target).appendChild(this.$element) : 
 		document.body.insertAdjacentElement('afterbegin', this.$element);
 
-		let padding = 3;
-		let hElement = this.$element.getBoundingClientRect().height
-		let hTitle = this.$elTitle.getBoundingClientRect().height
-		let hInner = this.$elInner.getBoundingClientRect().height
-		let hBtnPlace = this.$elBtnPlace.getBoundingClientRect().height
-		let height = hElement - hTitle - hBtnPlace - padding * 2
 
-		this.$elInner.style.padding = padding+'px'
-
-		if(height > 30){
-			this.$elInner.style.height = height+'px';
-		} else {
-			this.$element.style.height = "auto"
-			this.maxHeight = this.$element.getBoundingClientRect().height
-			console.log('height to small')
-		}
-
-		['mouseDownHandler', 'mouseUpHandler', 'onButton',
-		 'mouseMoveHandler', 'onResize', 'onClose'].forEach( element => this[element] = this[element].bind(this));
+		['mouseMoveDragCornerLeftHandler', 'mouseMoveDragCornerRightHandler',
+		'mouseMoveDragLeftHandler', 'mouseMoveDragBottomHandler', 'mouseMoveDragRightHandler',
+		'mouseDownHandler', 'mouseUpHandler', 'onButton',
+		'mouseMoveHandler', 'onResize', 'onClose'].forEach( element => this[element] = this[element].bind(this));
 
 
 		window.addEventListener('resize', this.onResize)
 		this.$elClose.addEventListener('click', this.onClose)
 		this.$elBtnPlace.addEventListener('click', this.onButton)
 		this.$elTitle.addEventListener('mousedown', this.mouseDownHandler);
+		this.$elDragLeft.addEventListener('mousedown', this.mouseDownHandler);
+		this.$elDragBottom.addEventListener('mousedown', this.mouseDownHandler);
+		this.$elDragRight.addEventListener('mousedown', this.mouseDownHandler);
+		this.$elDragCornerLeft.addEventListener('mousedown', this.mouseDownHandler);
+		this.$elDragCornerRight.addEventListener('mousedown', this.mouseDownHandler);
 		this.calculate()
 	}
 
@@ -126,6 +129,7 @@ export default class LittleModal {
 		this.limitWidth = this.windowWidth - this.elementWidth;
 		this.limitHeight = this.windowHeight - this.elementHeight;
 		this.setPosition(this.valueX, this.valueY)
+		console.log('calculating')
 	}
 
 	//для обертки открыть
@@ -154,7 +158,7 @@ export default class LittleModal {
 
 	  this.valueX = x - this.tochX
 	  this.valueY = y - this.tochY
-			
+
 		this.valueX = this.valueX > 0 ? this.valueX : 0
   	this.valueX = this.valueX > this.limitWidth ? this.limitWidth : this.valueX
 
@@ -171,6 +175,48 @@ export default class LittleModal {
   	this.$element.style.top = this.valueY + 'px'
 	}
 
+	moveDragLeft(pX, pY) {
+		//console.log('left')
+		if(this.limits(pX, pY)) {
+			let x = this.dragX - pX
+			this.dragX = pX
+			this.elementWidth = pX > this.maximumPosXForLeft ? this.innerMinWidth :  this.elementWidth + x
+			this.valueX = pX > this.maximumPosXForLeft ? this.dragMaximumLeftPositionX : this.valueX - x
+			
+			if(this.valueX > -1 ) {
+				this.$element.style.width = this.elementWidth + 'px'
+				this.$element.style.left = this.valueX + 'px'
+			}
+
+		}
+	}
+
+	moveDragBottom(pX, pY) {
+		//console.log('bottom')
+		if(this.limits(pX, pY)) {
+			let y = this.dragY-pY;
+			this.dragY = pY;
+			this.elementHeight = pY > this.maximumPosYForBottom ? this.elementHeight-y : this.innerMinHeight;
+
+			if(this.elementHeight + this.valueY <= this.windowHeight) {
+				this.$element.style.height = this.elementHeight + 'px'
+			}
+		}
+	}
+
+	moveDragRight(pX, pY) {
+		//console.log('right')
+		if(this.limits(pX, pY)) {
+			let x = this.dragX - pX;
+			this.dragX = pX;
+			this.elementWidth = pX > this.maximumPosXForRight ? this.elementWidth - x : this.innerMinWidth
+
+			if(this.elementWidth + this.valueX <= this.windowWidth) {
+			 this.$element.style.width = this.elementWidth + 'px'
+			}
+		}
+	}
+	
 	onClose(e) {
 		this.close()
 	}
@@ -191,28 +237,94 @@ export default class LittleModal {
 	}
 
 	mouseDownHandler(e) {
-		this.tochX = e.clientX - this.$element.getBoundingClientRect().left
-		this.tochY = e.clientY - this.$element.getBoundingClientRect().top
+		let withLimit = this.elementWidth - this.innerMinWidth
+		let heightLimit = this.elementHeight - this.innerMinHeight
+		this.dragX = e.clientX
+		this.dragY = e.clientY
+		//максимальная позиция мыши по x при которой изменяется ширина окна
+		this.maximumPosXForLeft = e.clientX + withLimit
+		this.maximumPosXForRight = e.clientX - withLimit
+		this.maximumPosYForBottom = e.clientY - heightLimit
+		this.dragMaximumLeftPositionX = this.$element.getBoundingClientRect().left - this.borderXMin + withLimit
 
-		if(this.scope){
-			let scope = this.scope.getBoundingClientRect()
-			this.tochX = e.clientX - this.$element.getBoundingClientRect().left + scope.left
-			this.tochY = e.clientY - this.$element.getBoundingClientRect().top + scope.top
+		switch(e.target.getAttribute('data-type')) {
+			case 'left':
+				document.addEventListener('mousemove', this.mouseMoveDragLeftHandler);
+				break;
+			case 'bottom':
+				document.addEventListener('mousemove', this.mouseMoveDragBottomHandler);
+				break;
+			case 'right':
+				document.addEventListener('mousemove', this.mouseMoveDragRightHandler);
+				break;
+			case 'cornerLeft':
+				document.addEventListener('mousemove', this.mouseMoveDragCornerLeftHandler);
+				break;
+			case 'cornerRight':
+				document.addEventListener('mousemove', this.mouseMoveDragCornerRightHandler);
+				break;
+			case 'title':
+				this.tochX = e.clientX - this.$element.getBoundingClientRect().left
+				this.tochY = e.clientY - this.$element.getBoundingClientRect().top
+
+				if(this.scope){
+					let scope = this.scope.getBoundingClientRect()
+					this.tochX += scope.left
+					this.tochY += scope.top
+				}
+				document.addEventListener('mousemove', this.mouseMoveHandler);
+				break;
 		}
-
 		document.addEventListener('mouseup', this.mouseUpHandler)
-		document.addEventListener('mousemove', this.mouseMoveHandler);
+	}
+
+	mouseMoveDragCornerLeftHandler(e) {
+		this.moveDragLeft(e.clientX, e.clientY)
+		this.moveDragBottom(e.clientX, e.clientY)
+	}
+
+	mouseMoveDragCornerRightHandler(e) {
+		this.moveDragRight(e.clientX, e.clientY)
+		this.moveDragBottom(e.clientX, e.clientY)
+	}
+
+	mouseMoveDragLeftHandler(e) {
+		this.moveDragLeft(e.clientX, e.clientY)
+	}
+
+	mouseMoveDragBottomHandler(e) {
+		this.moveDragBottom(e.clientX, e.clientY)
+	}
+
+	mouseMoveDragRightHandler(e) {
+		this.moveDragRight(e.clientX, e.clientY)
 	}
 
 	mouseUpHandler(e) {
-		document.removeEventListener('mousemove', this.mouseMoveHandler)
-		document.removeEventListener('mouseup', this.mouseUpHandler);
+		console.log('remove listeners')
+		document.removeEventListener('mousemove', this.mouseMoveHandler)	
+		document.removeEventListener('mousemove', this.downDragMouse)
+		document.removeEventListener('mousemove', this.mouseMoveDragLeftHandler)
+		document.removeEventListener('mousemove', this.mouseMoveDragBottomHandler)
+		document.removeEventListener('mousemove', this.mouseMoveDragRightHandler)
+		document.removeEventListener('mousemove', this.mouseMoveDragCornerLeftHandler)
+		document.removeEventListener('mousemove', this.mouseMoveDragCornerRightHandler)
+		document.removeEventListener('mouseup', this.mouseUpHandler)
+		document.removeEventListener('mousedown', this.mouseDownHandler)
+		this.calculate();
 	}
 
 	mouseMoveHandler(e) {
-		if(e.clientX > this.borderXMin && e.clientX < this.borderXMax && e.clientY > this.borderYMin && e.clientY < this.borderYMax) {
-			this.setPosition(e.clientX, e.clientY);
+		if(this.limits(e.clientX, e.clientY)) {
+			this.setPosition(e.clientX, e.clientY)
 		}
+	}
+
+	limits(x, y) {
+		if(x > this.borderXMin && x < this.borderXMax && y > this.borderYMin && y < this.borderYMax) {
+			return true
+		}
+		return false
 	}
 
 	destroy() {

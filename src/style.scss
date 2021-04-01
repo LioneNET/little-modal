@@ -13,10 +13,11 @@
 }
 
 .little-modal {
+  $corners: 5px;
   $radius: 5px;
+  $colorBorder: #b3b3b3;;
   position: absolute;
   background-color: #f7f7f7;
-  border: 1px solid #b3b3b3;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   top: 0px;
@@ -29,6 +30,9 @@
     border-top-right-radius: $radius;
     font-size: 16px;
     font-weight: bold;
+    height: 20px;
+    border: 1px solid $colorBorder;
+    border-bottom: none;
     @extend %selected-none;
 
     button {
@@ -48,14 +52,79 @@
 	&-body {
     overflow: hidden;
     overflow-y: auto;
+    border: 1px solid $colorBorder;
+    border-top: none;
+    border-bottom: none;
+    position: absolute;
+    top: 41px;
+    left: 0px;
+    right: 0px;
+    bottom: 39px;
+    padding: 10px;
 
     .inner-place {
 
     }
-	}
+  }
 
 	&-button-place {
     display: none;
     padding: 10px;
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    border: 1px solid $colorBorder;
+    border-top: none;
+    background-color: #efefef;
 	}
+
+  .dLeft, .dBottom, .dRight, .dCornerLeft, .dCornerRight {
+      z-index: 99;
+      display: block;
+      background-color: transparent;
+      position: absolute;
+      @extend %selected-none;
+    }
+
+  .dLeft {
+    width: $corners;
+    left: 0;
+    top: 40px;
+    bottom: 10px;
+    cursor: e-resize;
+  }
+
+  .dBottom {
+    height: $corners;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    cursor: n-resize;
+  }
+
+  .dRight {
+    width: $corners;
+    right: 0;
+    top: 40px;
+    bottom: 10px;
+    cursor: e-resize;
+  }
+
+  .dCornerLeft, .dCornerRight {
+    width: 10px;
+    height: 10px;
+    background-color: transparent;
+    bottom: 0px;
+  }
+
+  .dCornerLeft {
+    left: 0px;
+    cursor: sw-resize;
+  }
+
+  .dCornerRight {
+    right: 0px;
+    cursor: se-resize;
+  }
 }

@@ -9,7 +9,7 @@
 		.box {
 		  width: 600px;
 		  height: 450px;
-		  background-color: #60ff62;
+		  background-color: #ececec;
 		  margin: 0 auto;
 		  margin-top: 50px;
 		}
@@ -24,7 +24,18 @@
 </body>
 	<script type="text/javascript" src="dist/littlemodal.js"></script>
 	<script>
+	  let modal = littlemodal.init()
+		littlemodal.init({
+    	target: '.modal',
+			scope: '.box',
+			inner: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi maxime, tempore. Sunt ratione veniam omnis doloremque corrupti facilis minima dolorem impedit aliquid aliquam iste mollitia, at repellendus debitis quo distinctio.',
+		  wWidth: 350,
+			wHeight: 170,
+			OK: 'OK',
+			CANSEL: "CANSEL"
+		}).open();
 
+		/*
     var modal1 = littlemodal.init()
 
     var modal2 = littlemodal.init({
@@ -51,6 +62,6 @@
     		console.log(this)
     		modal2.close()
     	}
-    })
+    })*/
 	</script>
 </html>
