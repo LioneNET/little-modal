@@ -2,16 +2,16 @@
 
 function getTemplate(o){
 	let $modal = document.createElement('div')
-	$modal.classList.add('little-modal')
+	$modal.className = 'little-modal'
 	$modal.insertAdjacentHTML('afterbegin',`
+			<div class="dLeft" data-type="left"></div>
+			<div class="dBottom" data-type="bottom"></div>
+			<div class="dRight" data-type="right"></div>
+			<div class="dCornerLeft" data-type="cornerLeft"></div>
+			<div class="dCornerRight" data-type="cornerRight"></div>
 			<div class="little-modal-title" data-type="title">${o.title} <button>&#120;</button></div>
 			<div class="little-modal-body">
 				<div class="wrap">
-					<div class="dLeft" data-type="left"></div>
-					<div class="dBottom" data-type="bottom"></div>
-					<div class="dRight" data-type="right"></div>
-					<div class="dCornerLeft" data-type="cornerLeft"></div>
-					<div class="dCornerRight" data-type="cornerRight"></div>
 					<div class="inner-place">
 						${o.inner}
 					</div>
@@ -58,23 +58,6 @@ export default class LittleModal {
 
 	}
 
-	//вычисляемые свойства ширины окна
-	get cElementWidth() {
-		return this.elementWidth;
-	}
-	set cElementWidth(e) {
-		if(e > this.innerMinWidth)
-			this.elementWidth = e;
-	}
-
-	get cElementHeight() {
-		return this.elementHeight;
-	}
-	set cElementHeight(e) {
-		if(e > this.innerMinHeight)
-			this.elementHeight = e;
-	}
-
 	init() {
 		//если элемент есть, не инициализируем
 		if(this.$element !== null){
@@ -102,26 +85,8 @@ export default class LittleModal {
 		document.querySelector(this.target).appendChild(this.$element) : 
 		document.body.insertAdjacentElement('afterbegin', this.$element);
 
-		let padding = 3;
-		let hElement = this.$element.getBoundingClientRect().height
-		let hTitle = this.$elTitle.getBoundingClientRect().height
-		let hInner = this.$elInner.getBoundingClientRect().height
-		let hBtnPlace = this.$elBtnPlace.getBoundingClientRect().height
-		let height = hElement - hTitle - hBtnPlace - padding * 2
 
-		this.$elInner.style.padding = padding+'px'
-
-		if(height > 30){
-			this.$elInner.style.height = height+'px';
-		} else {
-			this.$element.style.height = "auto"
-			this.maxHeight = this.$element.getBoundingClientRect().height
-			console.log('height to small')
-		}
-
-		['mouseMoveDragCornerLeftHandler', 'mouseMoveDragCornerRightHandler',/*
-		'downCornerLeftHandler', 'downCornerRightHandler',
-		'downDragLeftHandler', 'downDragBottomHandler', 'downDragRightHandler',*/
+		['mouseMoveDragCornerLeftHandler', 'mouseMoveDragCornerRightHandler',
 		'mouseMoveDragLeftHandler', 'mouseMoveDragBottomHandler', 'mouseMoveDragRightHandler',
 		'mouseDownHandler', 'mouseUpHandler', 'onButton',
 		'mouseMoveHandler', 'onResize', 'onClose'].forEach( element => this[element] = this[element].bind(this));
@@ -149,7 +114,6 @@ export default class LittleModal {
 		this.windowHeight = window.innerHeight
 		this.borderXMax = this.windowWidth
 		this.borderYMax = this.windowHeight;
-		this.innerCor = this.$elInner.getBoundingClientRect().height;
 
 		//если есть внешние рамки то берем их
 		if(this.scope) {
@@ -194,7 +158,7 @@ export default class LittleModal {
 
 	  this.valueX = x - this.tochX
 	  this.valueY = y - this.tochY
-			
+
 		this.valueX = this.valueX > 0 ? this.valueX : 0
   	this.valueX = this.valueX > this.limitWidth ? this.limitWidth : this.valueX
 
@@ -211,47 +175,41 @@ export default class LittleModal {
   	this.$element.style.top = this.valueY + 'px'
 	}
 
-
 	moveDragLeft(pX, pY) {
 		//console.log('left')
 		if(this.limits(pX, pY)) {
 			let x = this.dragX - pX
 			this.dragX = pX
-			let xx = this.valueX
-			xx = xx - x;
-			//this.cElementWidth = this.cElementWidth+x;
-
-			this.setPosition(xx, this.valueY)
-			/*
+			this.elementWidth = pX > this.maximumPosXForLeft ? this.innerMinWidth :  this.elementWidth + x
+			this.valueX = pX > this.maximumPosXForLeft ? this.dragMaximumLeftPositionX : this.valueX - x
+			
 			if(this.valueX > -1 ) {
 				this.$element.style.width = this.elementWidth + 'px'
 				this.$element.style.left = this.valueX + 'px'
-			}*/
+			}
 
 		}
 	}
+
 	moveDragBottom(pX, pY) {
 		//console.log('bottom')
 		if(this.limits(pX, pY)) {
-			let y = this.dragY -pY;
+			let y = this.dragY-pY;
 			this.dragY = pY;
-			this.cElementHeight = this.cElementHeight-y;
+			this.elementHeight = pY > this.maximumPosYForBottom ? this.elementHeight-y : this.innerMinHeight;
 
 			if(this.elementHeight + this.valueY <= this.windowHeight) {
-				console.log(this.elementHeight + this.valueY, this.windowHeight)
-				this.innerCor = this.innerCor-y
-				this.$elInner.style.height = this.innerCor + 'px'
 				this.$element.style.height = this.elementHeight + 'px'
 			}
 		}
 	}
+
 	moveDragRight(pX, pY) {
 		//console.log('right')
 		if(this.limits(pX, pY)) {
 			let x = this.dragX - pX;
-
 			this.dragX = pX;
-			this.cElementWidth = this.cElementWidth-x;
+			this.elementWidth = pX > this.maximumPosXForRight ? this.elementWidth - x : this.innerMinWidth
 
 			if(this.elementWidth + this.valueX <= this.windowWidth) {
 			 this.$element.style.width = this.elementWidth + 'px'
@@ -279,9 +237,16 @@ export default class LittleModal {
 	}
 
 	mouseDownHandler(e) {
-		this.dragX = e.clientX;
-		this.dragY = e.clientY;
-		
+		let withLimit = this.elementWidth - this.innerMinWidth
+		let heightLimit = this.elementHeight - this.innerMinHeight
+		this.dragX = e.clientX
+		this.dragY = e.clientY
+		//максимальная позиция мыши по x при которой изменяется ширина окна
+		this.maximumPosXForLeft = e.clientX + withLimit
+		this.maximumPosXForRight = e.clientX - withLimit
+		this.maximumPosYForBottom = e.clientY - heightLimit
+		this.dragMaximumLeftPositionX = this.$element.getBoundingClientRect().left - this.borderXMin + withLimit
+
 		switch(e.target.getAttribute('data-type')) {
 			case 'left':
 				document.addEventListener('mousemove', this.mouseMoveDragLeftHandler);
