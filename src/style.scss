@@ -51,7 +51,6 @@
 
 	&-body {
     overflow: hidden;
-    overflow-y: auto;
     border: 1px solid $colorBorder;
     border-top: none;
     border-bottom: none;
@@ -60,10 +59,9 @@
     left: 0px;
     right: 0px;
     bottom: 39px;
-    padding: 10px;
 
     .inner-place {
-
+      padding: 10px;
     }
   }
 
@@ -128,3 +126,48 @@
     cursor: se-resize;
   }
 }
+
+
+
+.slider1, .slider2, .slider3 {
+  width: 450px;
+  margin: 0 auto;
+  margin-top: 50px;
+  box-sizing: border-box;
+}
+
+.little {
+  &-slider {
+    position: absolute;
+    top: 41px;
+    right: 1px;
+    bottom: 41px;
+    z-index: 9;
+  }
+
+  &-scale {
+    height: 100%;
+    width: 20px;
+    background-color: #093;
+    position: relative;
+    display: none;
+  }
+
+  &-pointer {
+    position: absolute;
+    background-color: #fbdb65;
+    left: 0;
+    right: 0;
+    height: 40px;
+  }
+
+  &-slider-line {
+    background-color: #a0294c;
+    height: 0px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+  }
+} 
