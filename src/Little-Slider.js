@@ -38,14 +38,20 @@ export default class LittleSlider {
 	}
 
 	calculate(outer=0, inner=0) {
-		this.pointerHeight = this.$pointer.offsetHeight
-		this.pointToMiddle = this.pointerHeight/2
-		this.scaleHeight = this.$element.offsetHeight - this.pointerHeight;
+
 		if(inner > outer) {
 			this.$element.style.display = "block"
 		} else {
 			this.$element.style.display = "none"
 		}
+		let percent = Math.round((outer/inner) * 100);
+
+		this.$pointer.style.height =  (percent < 100 ? percent : 10)+"%"
+		this.pointerHeight = this.$pointer.offsetHeight
+		this.pointToMiddle = this.pointerHeight/2
+		this.scaleHeight = this.$element.offsetHeight - this.pointerHeight;
+		
+
 		console.log(outer, inner)
 	}
 

@@ -81,15 +81,16 @@ export default class LittleModal {
 		this.$elInner = $element.querySelector('.little-modal .inner-place')
 		this.$elBtnPlace = $element.querySelector('.little-modal-button-place')
 		this.$element.style.width = maxWidth === "auto" ? "auto" : maxWidth+'px'
-		this.$element.style.height = maxHeight === "auto" ? "auto" : maxHeight+'px';
+		this.$element.style.height = maxHeight === "auto" ? "auto" : maxHeight+'px'
 
 		document.querySelector(this.target) ? 
 		document.querySelector(this.target).appendChild(this.$element) : 
-		document.body.insertAdjacentElement('afterbegin', this.$element)
-		this.slider = new LittleSlider(".little-slider");
+		document.body.insertAdjacentElement('afterbegin', this.$element);
+		
 
 
-		['mouseMoveDragCornerLeftHandler', 'mouseMoveDragCornerRightHandler',
+		['sliderOnChange',
+		'mouseMoveDragCornerLeftHandler', 'mouseMoveDragCornerRightHandler',
 		'mouseMoveDragLeftHandler', 'mouseMoveDragBottomHandler', 'mouseMoveDragRightHandler',
 		'mouseDownHandler', 'mouseUpHandler', 'onButton',
 		'mouseMoveHandler', 'onResize', 'onClose'].forEach( element => this[element] = this[element].bind(this));
@@ -103,12 +104,22 @@ export default class LittleModal {
 		this.$elDragRight.addEventListener('mousedown', this.mouseDownHandler);
 		this.$elDragCornerLeft.addEventListener('mousedown', this.mouseDownHandler);
 		this.$elDragCornerRight.addEventListener('mousedown', this.mouseDownHandler);
+		this.slider = new LittleSlider(".little-slider",{min: 0, max: 100, onChange: (value)=>this.sliderOnChange(value)});
 		this.calculate()
 	}
 
+	//slider functions
+	sliderOnChange(value){
+		let outer = this.$elBody.offsetHeight
+		let inner = this.$elInner.offsetHeight
+		let pos = inner - outer
+
+		this.$elBody.scrollTop = Math.round((pos/this.slider.max) * value)
+	}
+	//end slider functions
+
 	//пересчет переменых
 	calculate() {
-		this.slider.calculate()
 		this.tochX = 0
 		this.tochY = 0
 		this.elementWidth = this.$element.offsetWidth
@@ -129,9 +140,10 @@ export default class LittleModal {
 			this.windowHeight = scope.height
 		}
 
-		this.limitWidth = this.windowWidth - this.elementWidth;
-		this.limitHeight = this.windowHeight - this.elementHeight;
+		this.limitWidth = this.windowWidth - this.elementWidth
+		this.limitHeight = this.windowHeight - this.elementHeight
 		this.setPosition(this.valueX, this.valueY)
+		this.slider.calculate(this.$elBody.offsetHeight, this.$elInner.offsetHeight)
 		console.log('calculating')
 	}
 
