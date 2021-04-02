@@ -1,6 +1,6 @@
 function createSlider(o) {
 	let $element = document.createElement('div')
-	$element.classList.add('little-scale');
+	$element.className = 'little-scale';
 	$element.insertAdjacentHTML('afterbegin',`
 			<div class="little-slider-line"></div>
 			<div class="little-pointer"></div>
@@ -41,16 +41,18 @@ export default class LittleSlider {
 
 		if(inner > outer) {
 			this.$element.style.display = "block"
+			this.options.onShow && this.options.onShow.call();
 		} else {
 			this.$element.style.display = "none"
+			this.options.onHide && this.options.onHide.call();
 		}
 		let percent = Math.round((outer/inner) * 100);
 
-		this.$pointer.style.height =  (percent < 100 ? percent : 10)+"%"
+		this.$pointer.style.height =  (percent < 30 ? 30 : percent)+"%"
 		this.pointerHeight = this.$pointer.offsetHeight
 		this.pointToMiddle = this.pointerHeight/2
 		this.scaleHeight = this.$element.offsetHeight - this.pointerHeight;
-		
+		this.setPosition(this.currentPos)
 
 		console.log(outer, inner)
 	}
@@ -85,6 +87,7 @@ export default class LittleSlider {
 
 	//установить позицию и отобразить результат
 	setPosition (pos) {
+		this.currentPos = pos;
 		pos = pos < 0 ? 0 : pos >= this.scaleHeight ? this.scaleHeight : pos;
 		let value = this.getValueFromPosition(pos)
 		value = value > this.max ? this.max : value < this.min ? this.min : value

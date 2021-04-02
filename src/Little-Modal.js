@@ -104,7 +104,12 @@ export default class LittleModal {
 		this.$elDragRight.addEventListener('mousedown', this.mouseDownHandler);
 		this.$elDragCornerLeft.addEventListener('mousedown', this.mouseDownHandler);
 		this.$elDragCornerRight.addEventListener('mousedown', this.mouseDownHandler);
-		this.slider = new LittleSlider(".little-slider",{min: 0, max: 100, onChange: (value)=>this.sliderOnChange(value)});
+		this.slider = new LittleSlider(".little-slider",{
+			min: 0, max: 100, 
+			onChange: (value)=>this.sliderOnChange(value),
+			onShow: ()=>this.sliderOnShow(),
+			onHide: ()=>this.sliderOnHide()
+		});
 		this.calculate()
 	}
 
@@ -113,8 +118,17 @@ export default class LittleModal {
 		let outer = this.$elBody.offsetHeight
 		let inner = this.$elInner.offsetHeight
 		let pos = inner - outer
-
 		this.$elBody.scrollTop = Math.round((pos/this.slider.max) * value)
+	}
+	sliderOnShow() {
+		let classes = this.$elInner.className.split(" ")
+		this.$elInner.className = classes.filter(name=>name!=="sliderShow").join(" ")+" sliderShow"
+		console.log(this.$elInner.className)
+	}
+	sliderOnHide() {
+		let classes = this.$elInner.className.split(" ")
+		this.$elInner.className = classes.filter(name=>name!=="sliderShow").join(" ")
+		console.log(this.$elInner.className)
 	}
 	//end slider functions
 

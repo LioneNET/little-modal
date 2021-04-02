@@ -63,6 +63,10 @@
     .inner-place {
       padding: 10px;
     }
+
+    .sliderShow {
+      padding-right: 20px;
+    }
   }
 
 	&-button-place {
@@ -147,21 +151,22 @@
 
   &-scale {
     height: 100%;
-    width: 20px;
-    background-color: #093;
+    width: 17px;
+    background-color: #d0d0d0;
     position: relative;
     display: none;
   }
 
   &-pointer {
     position: absolute;
-    background-color: #fbdb65;
-    left: 0;
-    right: 0;
+    background-color: #ddf1e6;
+    left: 2px;
+    right: 2px;
     height: 40px;
   }
 
   &-slider-line {
+    display: none;
     background-color: #a0294c;
     height: 0px;
     top: 0;
