@@ -22,6 +22,7 @@
   border-top-right-radius: 5px;
   top: 0px;
   left: 0px;
+  z-index: 99;
 
   &-title {
     padding: 10px;
@@ -50,7 +51,8 @@
 	}
 
 	&-body {
-    overflow: hidden;
+    overflow: auto;
+    overflow-y: hidden;
     border: 1px solid $colorBorder;
     border-top: none;
     border-bottom: none;
@@ -146,7 +148,7 @@
     top: 41px;
     right: 1px;
     bottom: 41px;
-    z-index: 9;
+    z-index: 2;
   }
 
   &-scale {

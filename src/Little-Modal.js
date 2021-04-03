@@ -30,7 +30,7 @@ function getTemplate(o){
 export default class LittleModal {
 	constructor(o={}){
 
-		this.options = {}
+		this.options = o
 		this.options.inner = o.inner ?? ''
 		this.options.title = o.title ?? 'Little modal'
 		this.options.OK = o.OK ?? false
@@ -89,7 +89,7 @@ export default class LittleModal {
 		
 
 
-		['sliderOnChange',
+		['sliderOnChange', 'sliderScrolling',
 		'mouseMoveDragCornerLeftHandler', 'mouseMoveDragCornerRightHandler',
 		'mouseMoveDragLeftHandler', 'mouseMoveDragBottomHandler', 'mouseMoveDragRightHandler',
 		'mouseDownHandler', 'mouseUpHandler', 'onButton',
@@ -104,7 +104,7 @@ export default class LittleModal {
 		this.$elDragRight.addEventListener('mousedown', this.mouseDownHandler);
 		this.$elDragCornerLeft.addEventListener('mousedown', this.mouseDownHandler);
 		this.$elDragCornerRight.addEventListener('mousedown', this.mouseDownHandler);
-		this.slider = new LittleSlider(".little-slider",{
+		this.slider = new LittleSlider(this.$element, ".little-slider",{
 			min: 0, max: 100, 
 			onChange: (value)=>this.sliderOnChange(value),
 			onShow: ()=>this.sliderOnShow(),
@@ -118,17 +118,26 @@ export default class LittleModal {
 		let outer = this.$elBody.offsetHeight
 		let inner = this.$elInner.offsetHeight
 		let pos = inner - outer
-		this.$elBody.scrollTop = Math.round((pos/this.slider.max) * value)
+		this.$elBody.scrollTop = Math.round((pos/this.slider.max) * value);
+		this.options.onSliderChange && this.options.onSliderChange.call(this.options, value);
 	}
 	sliderOnShow() {
 		let classes = this.$elInner.className.split(" ")
 		this.$elInner.className = classes.filter(name=>name!=="sliderShow").join(" ")+" sliderShow"
-		console.log(this.$elInner.className)
+		this.$elBody.addEventListener("wheel", this.sliderScrolling)
+		this.options.onSliderShow && this.options.onSliderShow.call(this.options)
+
 	}
 	sliderOnHide() {
 		let classes = this.$elInner.className.split(" ")
 		this.$elInner.className = classes.filter(name=>name!=="sliderShow").join(" ")
-		console.log(this.$elInner.className)
+		this.$elBody.removeEventListener("wheel", this.sliderScrolling)
+		this.options.onSliderHide && this.options.onSliderHide.call(this.options)
+	}
+	sliderScrolling(e) {
+		let pos = this.slider.getPositionFromValue(this.slider.currentValue);
+		this.slider.setPosition(pos - (e.deltaY * -0.1))
+		this.options.onSliderScroll && this.options.onSliderScroll.call(this.options, pos)
 	}
 	//end slider functions
 

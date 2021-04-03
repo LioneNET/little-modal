@@ -9,9 +9,10 @@ function createSlider(o) {
 }
 
 export default class LittleSlider {
-	constructor(el, options = {}){
+	constructor($element, el, options = {}){
 		this.y1 = 0
 		this.y2 = 0
+		this.targetElement = $element
 		this.target = el
 		this.options = options
 		this.max = options.max || 100
@@ -19,6 +20,7 @@ export default class LittleSlider {
 		this.value = typeof options.value === 'number' ? options.value : this.min
 		this.step = options.step || 1
 		this.currentValue = 0
+		this.isShow = false
 		this.$element = createSlider()
 		this.$sliderLine = this.$element.querySelector('.little-slider-line')
 		this.$pointer = this.$element.querySelector('.little-pointer')
@@ -28,8 +30,8 @@ export default class LittleSlider {
 	}
 
 	init(){
-		document.querySelector(this.target).appendChild(this.$element)
-		
+		this.targetElement.querySelector(this.target).appendChild(this.$element)
+	
 		this.options.onInit && this.options.onInit.call();
 		['mouseDownHandler', 'mouseUpHandler', 'mouseMoveHandler'].forEach( element => this[element] = this[element].bind(this))
 		this.$element.addEventListener("mousedown", this.mouseDownHandler)
@@ -39,12 +41,16 @@ export default class LittleSlider {
 
 	calculate(outer=0, inner=0) {
 
-		if(inner > outer) {
+		if(inner > outer && !this.isShow) {
+			this.isShow = true
 			this.$element.style.display = "block"
 			this.options.onShow && this.options.onShow.call();
-		} else {
+			console.log('slider show')
+		} else if(outer > inner && this.isShow) {
+			this.isShow = false
 			this.$element.style.display = "none"
 			this.options.onHide && this.options.onHide.call();
+			console.log('slider hide')
 		}
 		let percent = Math.round((outer/inner) * 100);
 
