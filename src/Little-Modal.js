@@ -355,6 +355,7 @@ export default class LittleModal {
 		document.removeEventListener('mouseup', this.mouseUpHandler)
 		document.removeEventListener('mousedown', this.mouseDownHandler)
 		this.slider.calculate(this.$elBody.offsetHeight, this.$elInner.offsetHeight)
+		this.calculate()
 	}
 
 	mouseMoveHandler(e) {
