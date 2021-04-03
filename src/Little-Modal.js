@@ -1,9 +1,10 @@
-//import resize from './Resize.js'
+import LittleSlider from './Little-Slider.js'
 
 function getTemplate(o){
 	let $modal = document.createElement('div')
 	$modal.className = 'little-modal'
 	$modal.insertAdjacentHTML('afterbegin',`
+			<div class="little-slider"></div>
 			<div class="dLeft" data-type="left"></div>
 			<div class="dBottom" data-type="bottom"></div>
 			<div class="dRight" data-type="right"></div>
@@ -29,7 +30,7 @@ function getTemplate(o){
 export default class LittleModal {
 	constructor(o={}){
 
-		this.options = {}
+		this.options = o
 		this.options.inner = o.inner ?? ''
 		this.options.title = o.title ?? 'Little modal'
 		this.options.OK = o.OK ?? false
@@ -67,6 +68,7 @@ export default class LittleModal {
 		let $element = this.$element ?? getTemplate(this.options)
 		let maxWidth = this.options.wWidth
 		let maxHeight = this.options.wHeight
+
 		this.$element = $element
 		this.$elTitle = $element.querySelector('.little-modal-title')
 		this.$elClose = this.$elTitle.querySelector('button')
@@ -79,18 +81,19 @@ export default class LittleModal {
 		this.$elInner = $element.querySelector('.little-modal .inner-place')
 		this.$elBtnPlace = $element.querySelector('.little-modal-button-place')
 		this.$element.style.width = maxWidth === "auto" ? "auto" : maxWidth+'px'
-		this.$element.style.height = maxHeight === "auto" ? "auto" : maxHeight+'px';
+		this.$element.style.height = maxHeight === "auto" ? "auto" : maxHeight+'px'
 
 		document.querySelector(this.target) ? 
 		document.querySelector(this.target).appendChild(this.$element) : 
 		document.body.insertAdjacentElement('afterbegin', this.$element);
+		
 
 
-		['mouseMoveDragCornerLeftHandler', 'mouseMoveDragCornerRightHandler',
+		['sliderOnChange', 'sliderScrolling',
+		'mouseMoveDragCornerLeftHandler', 'mouseMoveDragCornerRightHandler',
 		'mouseMoveDragLeftHandler', 'mouseMoveDragBottomHandler', 'mouseMoveDragRightHandler',
 		'mouseDownHandler', 'mouseUpHandler', 'onButton',
 		'mouseMoveHandler', 'onResize', 'onClose'].forEach( element => this[element] = this[element].bind(this));
-
 
 		window.addEventListener('resize', this.onResize)
 		this.$elClose.addEventListener('click', this.onClose)
@@ -101,8 +104,42 @@ export default class LittleModal {
 		this.$elDragRight.addEventListener('mousedown', this.mouseDownHandler);
 		this.$elDragCornerLeft.addEventListener('mousedown', this.mouseDownHandler);
 		this.$elDragCornerRight.addEventListener('mousedown', this.mouseDownHandler);
+		this.slider = new LittleSlider(this.$element, ".little-slider",{
+			min: 0, max: 100, 
+			onChange: (value)=>this.sliderOnChange(value),
+			onShow: ()=>this.sliderOnShow(),
+			onHide: ()=>this.sliderOnHide()
+		});
 		this.calculate()
 	}
+
+	//slider functions
+	sliderOnChange(value){
+		let outer = this.$elBody.offsetHeight
+		let inner = this.$elInner.offsetHeight
+		let pos = inner - outer
+		this.$elBody.scrollTop = Math.round((pos/this.slider.max) * value);
+		this.options.onSliderChange && this.options.onSliderChange.call(this.options, value);
+	}
+	sliderOnShow() {
+		let classes = this.$elInner.className.split(" ")
+		this.$elInner.className = classes.filter(name=>name!=="sliderShow").join(" ")+" sliderShow"
+		this.$elBody.addEventListener("wheel", this.sliderScrolling)
+		this.options.onSliderShow && this.options.onSliderShow.call(this.options)
+
+	}
+	sliderOnHide() {
+		let classes = this.$elInner.className.split(" ")
+		this.$elInner.className = classes.filter(name=>name!=="sliderShow").join(" ")
+		this.$elBody.removeEventListener("wheel", this.sliderScrolling)
+		this.options.onSliderHide && this.options.onSliderHide.call(this.options)
+	}
+	sliderScrolling(e) {
+		let pos = this.slider.getPositionFromValue(this.slider.currentValue);
+		this.slider.setPosition(pos - (e.deltaY * -0.1))
+		this.options.onSliderScroll && this.options.onSliderScroll.call(this.options, pos)
+	}
+	//end slider functions
 
 	//пересчет переменых
 	calculate() {
@@ -126,9 +163,10 @@ export default class LittleModal {
 			this.windowHeight = scope.height
 		}
 
-		this.limitWidth = this.windowWidth - this.elementWidth;
-		this.limitHeight = this.windowHeight - this.elementHeight;
+		this.limitWidth = this.windowWidth - this.elementWidth
+		this.limitHeight = this.windowHeight - this.elementHeight
 		this.setPosition(this.valueX, this.valueY)
+		this.slider.calculate(this.$elBody.offsetHeight, this.$elInner.offsetHeight)
 		console.log('calculating')
 	}
 
@@ -281,23 +319,28 @@ export default class LittleModal {
 	mouseMoveDragCornerLeftHandler(e) {
 		this.moveDragLeft(e.clientX, e.clientY)
 		this.moveDragBottom(e.clientX, e.clientY)
+		this.slider.calculate(this.$elBody.offsetHeight, this.$elInner.offsetHeight)
 	}
 
 	mouseMoveDragCornerRightHandler(e) {
 		this.moveDragRight(e.clientX, e.clientY)
 		this.moveDragBottom(e.clientX, e.clientY)
+		this.slider.calculate(this.$elBody.offsetHeight, this.$elInner.offsetHeight)
 	}
 
 	mouseMoveDragLeftHandler(e) {
 		this.moveDragLeft(e.clientX, e.clientY)
+		this.slider.calculate(this.$elBody.offsetHeight, this.$elInner.offsetHeight)
 	}
 
 	mouseMoveDragBottomHandler(e) {
 		this.moveDragBottom(e.clientX, e.clientY)
+		this.slider.calculate(this.$elBody.offsetHeight, this.$elInner.offsetHeight)
 	}
 
 	mouseMoveDragRightHandler(e) {
 		this.moveDragRight(e.clientX, e.clientY)
+		this.slider.calculate(this.$elBody.offsetHeight, this.$elInner.offsetHeight)
 	}
 
 	mouseUpHandler(e) {
@@ -311,7 +354,7 @@ export default class LittleModal {
 		document.removeEventListener('mousemove', this.mouseMoveDragCornerRightHandler)
 		document.removeEventListener('mouseup', this.mouseUpHandler)
 		document.removeEventListener('mousedown', this.mouseDownHandler)
-		this.calculate();
+		this.slider.calculate(this.$elBody.offsetHeight, this.$elInner.offsetHeight)
 	}
 
 	mouseMoveHandler(e) {
