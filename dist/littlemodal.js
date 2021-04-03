@@ -1,3 +1,11 @@
+/*
+ * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -10,8 +18,63 @@
 })(self, function() {
 return /******/ (function() { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	// The require scope
-/******/ 	var __webpack_require__ = {};
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./src/Little-Modal.js":
+/*!*****************************!*\
+  !*** ./src/Little-Modal.js ***!
+  \*****************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": function() { return /* binding */ LittleModal; }\n/* harmony export */ });\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\n//import resize from './Resize.js'\nfunction getTemplate(o) {\n  var $modal = document.createElement('div');\n  $modal.className = 'little-modal';\n  $modal.insertAdjacentHTML('afterbegin', \"\\n\\t\\t\\t<div class=\\\"dLeft\\\" data-type=\\\"left\\\"></div>\\n\\t\\t\\t<div class=\\\"dBottom\\\" data-type=\\\"bottom\\\"></div>\\n\\t\\t\\t<div class=\\\"dRight\\\" data-type=\\\"right\\\"></div>\\n\\t\\t\\t<div class=\\\"dCornerLeft\\\" data-type=\\\"cornerLeft\\\"></div>\\n\\t\\t\\t<div class=\\\"dCornerRight\\\" data-type=\\\"cornerRight\\\"></div>\\n\\t\\t\\t<div class=\\\"little-modal-title\\\" data-type=\\\"title\\\">\".concat(o.title, \" <button>&#120;</button></div>\\n\\t\\t\\t<div class=\\\"little-modal-body\\\">\\n\\t\\t\\t\\t<div class=\\\"wrap\\\">\\n\\t\\t\\t\\t\\t<div class=\\\"inner-place\\\">\\n\\t\\t\\t\\t\\t\\t\").concat(o.inner, \"\\n\\t\\t\\t\\t\\t</div>\\n\\t\\t\\t\\t</div>\\n\\t\\t\\t</div>\\n\\t\\t\\t<div class=\\\"little-modal-button-place\\\" \").concat(o.OK || o.CANSEL ? \"style='display: block;'\" : '', \">\\n\\t\\t\\t\\t\").concat(o.OK ? \"<button data-type=\\\"OK\\\">\".concat(o.OK, \"</button>\") : '', \"\\n\\t\\t\\t\\t\").concat(o.CANSEL ? \"<button data-type=\\\"CANSEL\\\">\".concat(o.CANSEL, \"</button>\") : '', \"\\n\\t\\t\\t</div>\\n\\t\\t\"));\n  return $modal;\n}\n\nvar LittleModal = /*#__PURE__*/function () {\n  function LittleModal() {\n    var _o$inner, _o$title, _o$OK, _o$CANSEL, _o$wWidth, _o$wHeight, _o$target;\n\n    var o = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};\n\n    _classCallCheck(this, LittleModal);\n\n    this.options = {};\n    this.options.inner = (_o$inner = o.inner) !== null && _o$inner !== void 0 ? _o$inner : '';\n    this.options.title = (_o$title = o.title) !== null && _o$title !== void 0 ? _o$title : 'Little modal';\n    this.options.OK = (_o$OK = o.OK) !== null && _o$OK !== void 0 ? _o$OK : false;\n    this.options.CANSEL = (_o$CANSEL = o.CANSEL) !== null && _o$CANSEL !== void 0 ? _o$CANSEL : false;\n    this.options.wWidth = (_o$wWidth = o.wWidth) !== null && _o$wWidth !== void 0 ? _o$wWidth : 300;\n    this.options.wHeight = (_o$wHeight = o.wHeight) !== null && _o$wHeight !== void 0 ? _o$wHeight : 150;\n    this.$element = null;\n    this.target = (_o$target = o.target) !== null && _o$target !== void 0 ? _o$target : \"body\";\n    this.scope = document.querySelector(o.scope) || false;\n    this.tochX = 0;\n    this.tochY = 0;\n    this.valueX = 0; //Math.round(Math.random()*1000)\n\n    this.valueY = 0; //Math.round(Math.random()*1000)\n\n    this.borderXMin = 0;\n    this.borderXMax = 0;\n    this.borderYMin = 0;\n    this.borderYMax = 0;\n    this.innerMinWidth = 250;\n    this.innerMinHeight = 150;\n    this.$body = document.querySelector('body');\n\n    if (this.scope) {\n      this.scope.style.position = 'relative';\n    }\n  }\n\n  _createClass(LittleModal, [{\n    key: \"init\",\n    value: function init() {\n      var _this$$element,\n          _this = this;\n\n      //если элемент есть, не инициализируем\n      if (this.$element !== null) {\n        return;\n      }\n\n      var $element = (_this$$element = this.$element) !== null && _this$$element !== void 0 ? _this$$element : getTemplate(this.options);\n      var maxWidth = this.options.wWidth;\n      var maxHeight = this.options.wHeight;\n      this.$element = $element;\n      this.$elTitle = $element.querySelector('.little-modal-title');\n      this.$elClose = this.$elTitle.querySelector('button');\n      this.$elBody = $element.querySelector('.little-modal-body');\n      this.$elDragLeft = $element.querySelector('.dLeft');\n      this.$elDragBottom = $element.querySelector('.dBottom');\n      this.$elDragRight = $element.querySelector('.dRight');\n      this.$elDragCornerLeft = $element.querySelector('.dCornerLeft');\n      this.$elDragCornerRight = $element.querySelector('.dCornerRight');\n      this.$elInner = $element.querySelector('.little-modal .inner-place');\n      this.$elBtnPlace = $element.querySelector('.little-modal-button-place');\n      this.$element.style.width = maxWidth === \"auto\" ? \"auto\" : maxWidth + 'px';\n      this.$element.style.height = maxHeight === \"auto\" ? \"auto\" : maxHeight + 'px';\n      document.querySelector(this.target) ? document.querySelector(this.target).appendChild(this.$element) : document.body.insertAdjacentElement('afterbegin', this.$element);\n      ['mouseMoveDragCornerLeftHandler', 'mouseMoveDragCornerRightHandler', 'mouseMoveDragLeftHandler', 'mouseMoveDragBottomHandler', 'mouseMoveDragRightHandler', 'mouseDownHandler', 'mouseUpHandler', 'onButton', 'mouseMoveHandler', 'onResize', 'onClose'].forEach(function (element) {\n        return _this[element] = _this[element].bind(_this);\n      });\n      window.addEventListener('resize', this.onResize);\n      this.$elClose.addEventListener('click', this.onClose);\n      this.$elBtnPlace.addEventListener('click', this.onButton);\n      this.$elTitle.addEventListener('mousedown', this.mouseDownHandler);\n      this.$elDragLeft.addEventListener('mousedown', this.mouseDownHandler);\n      this.$elDragBottom.addEventListener('mousedown', this.mouseDownHandler);\n      this.$elDragRight.addEventListener('mousedown', this.mouseDownHandler);\n      this.$elDragCornerLeft.addEventListener('mousedown', this.mouseDownHandler);\n      this.$elDragCornerRight.addEventListener('mousedown', this.mouseDownHandler);\n      this.calculate();\n    } //пересчет переменых\n\n  }, {\n    key: \"calculate\",\n    value: function calculate() {\n      this.tochX = 0;\n      this.tochY = 0;\n      this.elementWidth = this.$element.offsetWidth;\n      this.elementHeight = this.$element.offsetHeight;\n      this.windowWidth = window.innerWidth;\n      this.windowHeight = window.innerHeight;\n      this.borderXMax = this.windowWidth;\n      this.borderYMax = this.windowHeight; //если есть внешние рамки то берем их\n\n      if (this.scope) {\n        var scope = this.scope.getBoundingClientRect();\n        this.borderXMin = scope.left;\n        this.borderXMax = scope.right;\n        this.borderYMin = scope.top;\n        this.borderYMax = scope.bottom;\n        this.windowWidth = scope.width;\n        this.windowHeight = scope.height;\n      }\n\n      this.limitWidth = this.windowWidth - this.elementWidth;\n      this.limitHeight = this.windowHeight - this.elementHeight;\n      this.setPosition(this.valueX, this.valueY);\n      console.log('calculating');\n    } //для обертки открыть\n\n  }, {\n    key: \"open\",\n    value: function open(params) {\n      console.log(params);\n\n      for (var key in params) {\n        if (this.options[key] !== 'undefined') {\n          this.options[key] = params[key];\n        }\n      }\n\n      this.init();\n    } //для обертки закрыть\n\n  }, {\n    key: \"close\",\n    value: function close() {\n      if (this.$element !== null) this.destroy();\n    } //двигаем окно\n\n  }, {\n    key: \"setPosition\",\n    value: function setPosition(x, y) {\n      var minX = this.tochX;\n      var maxX = this.windowWidth - this.elementWidth + this.tochX;\n      var minY = this.tochY;\n      var maxY = this.windowHeight - this.elementHeight + this.tochY;\n      this.valueX = x - this.tochX;\n      this.valueY = y - this.tochY;\n      this.valueX = this.valueX > 0 ? this.valueX : 0;\n      this.valueX = this.valueX > this.limitWidth ? this.limitWidth : this.valueX;\n      this.valueY = this.valueY > 0 ? this.valueY : 0;\n      this.valueY = this.valueY > this.limitHeight ? this.limitHeight : this.valueY;\n      this.valueX = x > minX ? this.valueX : 0;\n      this.valueX = x > maxX ? this.limitWidth : this.valueX;\n      this.valueY = y > minY ? this.valueY : 0;\n      this.valueY = y > maxY ? this.limitHeight : this.valueY;\n      this.$element.style.left = this.valueX + 'px';\n      this.$element.style.top = this.valueY + 'px';\n    }\n  }, {\n    key: \"moveDragLeft\",\n    value: function moveDragLeft(pX, pY) {\n      //console.log('left')\n      if (this.limits(pX, pY)) {\n        var x = this.dragX - pX;\n        this.dragX = pX;\n        this.elementWidth = pX > this.maximumPosXForLeft ? this.innerMinWidth : this.elementWidth + x;\n        this.valueX = pX > this.maximumPosXForLeft ? this.dragMaximumLeftPositionX : this.valueX - x;\n\n        if (this.valueX > -1) {\n          this.$element.style.width = this.elementWidth + 'px';\n          this.$element.style.left = this.valueX + 'px';\n        }\n      }\n    }\n  }, {\n    key: \"moveDragBottom\",\n    value: function moveDragBottom(pX, pY) {\n      //console.log('bottom')\n      if (this.limits(pX, pY)) {\n        var y = this.dragY - pY;\n        this.dragY = pY;\n        this.elementHeight = pY > this.maximumPosYForBottom ? this.elementHeight - y : this.innerMinHeight;\n\n        if (this.elementHeight + this.valueY <= this.windowHeight) {\n          this.$element.style.height = this.elementHeight + 'px';\n        }\n      }\n    }\n  }, {\n    key: \"moveDragRight\",\n    value: function moveDragRight(pX, pY) {\n      //console.log('right')\n      if (this.limits(pX, pY)) {\n        var x = this.dragX - pX;\n        this.dragX = pX;\n        this.elementWidth = pX > this.maximumPosXForRight ? this.elementWidth - x : this.innerMinWidth;\n\n        if (this.elementWidth + this.valueX <= this.windowWidth) {\n          this.$element.style.width = this.elementWidth + 'px';\n        }\n      }\n    }\n  }, {\n    key: \"onClose\",\n    value: function onClose(e) {\n      this.close();\n    }\n  }, {\n    key: \"onButton\",\n    value: function onButton(e) {\n      switch (e.target.getAttribute('data-type')) {\n        case 'OK':\n          this.options.onOk && this.options.onOk.call(this.options, e);\n          break;\n\n        case 'CANSEL':\n          this.options.onCansel && this.options.onCansel.call(this.options, e);\n          break;\n      }\n    }\n  }, {\n    key: \"onResize\",\n    value: function onResize(e) {\n      this.calculate();\n    }\n  }, {\n    key: \"mouseDownHandler\",\n    value: function mouseDownHandler(e) {\n      var withLimit = this.elementWidth - this.innerMinWidth;\n      var heightLimit = this.elementHeight - this.innerMinHeight;\n      this.dragX = e.clientX;\n      this.dragY = e.clientY; //максимальная позиция мыши по x при которой изменяется ширина окна\n\n      this.maximumPosXForLeft = e.clientX + withLimit;\n      this.maximumPosXForRight = e.clientX - withLimit;\n      this.maximumPosYForBottom = e.clientY - heightLimit;\n      this.dragMaximumLeftPositionX = this.$element.getBoundingClientRect().left - this.borderXMin + withLimit;\n\n      switch (e.target.getAttribute('data-type')) {\n        case 'left':\n          document.addEventListener('mousemove', this.mouseMoveDragLeftHandler);\n          break;\n\n        case 'bottom':\n          document.addEventListener('mousemove', this.mouseMoveDragBottomHandler);\n          break;\n\n        case 'right':\n          document.addEventListener('mousemove', this.mouseMoveDragRightHandler);\n          break;\n\n        case 'cornerLeft':\n          document.addEventListener('mousemove', this.mouseMoveDragCornerLeftHandler);\n          break;\n\n        case 'cornerRight':\n          document.addEventListener('mousemove', this.mouseMoveDragCornerRightHandler);\n          break;\n\n        case 'title':\n          this.tochX = e.clientX - this.$element.getBoundingClientRect().left;\n          this.tochY = e.clientY - this.$element.getBoundingClientRect().top;\n\n          if (this.scope) {\n            var scope = this.scope.getBoundingClientRect();\n            this.tochX += scope.left;\n            this.tochY += scope.top;\n          }\n\n          document.addEventListener('mousemove', this.mouseMoveHandler);\n          break;\n      }\n\n      document.addEventListener('mouseup', this.mouseUpHandler);\n    }\n  }, {\n    key: \"mouseMoveDragCornerLeftHandler\",\n    value: function mouseMoveDragCornerLeftHandler(e) {\n      this.moveDragLeft(e.clientX, e.clientY);\n      this.moveDragBottom(e.clientX, e.clientY);\n    }\n  }, {\n    key: \"mouseMoveDragCornerRightHandler\",\n    value: function mouseMoveDragCornerRightHandler(e) {\n      this.moveDragRight(e.clientX, e.clientY);\n      this.moveDragBottom(e.clientX, e.clientY);\n    }\n  }, {\n    key: \"mouseMoveDragLeftHandler\",\n    value: function mouseMoveDragLeftHandler(e) {\n      this.moveDragLeft(e.clientX, e.clientY);\n    }\n  }, {\n    key: \"mouseMoveDragBottomHandler\",\n    value: function mouseMoveDragBottomHandler(e) {\n      this.moveDragBottom(e.clientX, e.clientY);\n    }\n  }, {\n    key: \"mouseMoveDragRightHandler\",\n    value: function mouseMoveDragRightHandler(e) {\n      this.moveDragRight(e.clientX, e.clientY);\n    }\n  }, {\n    key: \"mouseUpHandler\",\n    value: function mouseUpHandler(e) {\n      console.log('remove listeners');\n      document.removeEventListener('mousemove', this.mouseMoveHandler);\n      document.removeEventListener('mousemove', this.downDragMouse);\n      document.removeEventListener('mousemove', this.mouseMoveDragLeftHandler);\n      document.removeEventListener('mousemove', this.mouseMoveDragBottomHandler);\n      document.removeEventListener('mousemove', this.mouseMoveDragRightHandler);\n      document.removeEventListener('mousemove', this.mouseMoveDragCornerLeftHandler);\n      document.removeEventListener('mousemove', this.mouseMoveDragCornerRightHandler);\n      document.removeEventListener('mouseup', this.mouseUpHandler);\n      document.removeEventListener('mousedown', this.mouseDownHandler);\n      this.calculate();\n    }\n  }, {\n    key: \"mouseMoveHandler\",\n    value: function mouseMoveHandler(e) {\n      if (this.limits(e.clientX, e.clientY)) {\n        this.setPosition(e.clientX, e.clientY);\n      }\n    }\n  }, {\n    key: \"limits\",\n    value: function limits(x, y) {\n      if (x > this.borderXMin && x < this.borderXMax && y > this.borderYMin && y < this.borderYMax) {\n        return true;\n      }\n\n      return false;\n    }\n  }, {\n    key: \"destroy\",\n    value: function destroy() {\n      this.$elClose.removeEventListener('onclick', this.onClose);\n      window.removeEventListener('resize', this.onResize);\n      this.$elTitle.removeEventListener('mousedown', this.mouseDownHandler);\n      this.$elBtnPlace.removeEventListener('click', this.onButton);\n      this.$element.parentNode.removeChild(this.$element);\n      this.$element = null;\n    }\n  }]);\n\n  return LittleModal;\n}();\n\n\n\n//# sourceURL=webpack://littlemodal/./src/Little-Modal.js?");
+
+/***/ }),
+
+/***/ "./src/index.js":
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Little_Modal_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Little-Modal.js */ \"./src/Little-Modal.js\");\n/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style.scss */ \"./src/style.scss\");\n\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  //обертка для класса\n  init: function init() {\n    var o = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};\n    var instance = null;\n    return {\n      open: function open() {\n        var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};\n        instance = instance === null ? new _Little_Modal_js__WEBPACK_IMPORTED_MODULE_0__.default(o) : instance;\n        instance.open(params);\n      },\n      close: function close() {\n        if (instance !== null) instance.close();else console.log('is it already closed');\n      }\n    };\n  }\n});\n\n//# sourceURL=webpack://littlemodal/./src/index.js?");
+
+/***/ }),
+
+/***/ "./src/style.scss":
+/*!************************!*\
+  !*** ./src/style.scss ***!
+  \************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n\n\n//# sourceURL=webpack://littlemodal/./src/style.scss?");
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
@@ -31,389 +94,25 @@ return /******/ (function() { // webpackBootstrap
 /******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
 /******/ 	}();
 /******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = function(exports) {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  "default": function() { return /* binding */ src; }
-});
-
-;// CONCATENATED MODULE: ./src/Little-Modal.js
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-//import resize from './Resize.js'
-function getTemplate(o) {
-  var $modal = document.createElement('div');
-  $modal.className = 'little-modal';
-  $modal.insertAdjacentHTML('afterbegin', "\n\t\t\t<div class=\"dLeft\" data-type=\"left\"></div>\n\t\t\t<div class=\"dBottom\" data-type=\"bottom\"></div>\n\t\t\t<div class=\"dRight\" data-type=\"right\"></div>\n\t\t\t<div class=\"dCornerLeft\" data-type=\"cornerLeft\"></div>\n\t\t\t<div class=\"dCornerRight\" data-type=\"cornerRight\"></div>\n\t\t\t<div class=\"little-modal-title\" data-type=\"title\">".concat(o.title, " <button>&#120;</button></div>\n\t\t\t<div class=\"little-modal-body\">\n\t\t\t\t<div class=\"wrap\">\n\t\t\t\t\t<div class=\"inner-place\">\n\t\t\t\t\t\t").concat(o.inner, "\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class=\"little-modal-button-place\" ").concat(o.OK || o.CANSEL ? "style='display: block;'" : '', ">\n\t\t\t\t").concat(o.OK ? "<button data-type=\"OK\">".concat(o.OK, "</button>") : '', "\n\t\t\t\t").concat(o.CANSEL ? "<button data-type=\"CANSEL\">".concat(o.CANSEL, "</button>") : '', "\n\t\t\t</div>\n\t\t"));
-  return $modal;
-}
-
-var LittleModal = /*#__PURE__*/function () {
-  function LittleModal() {
-    var _o$inner, _o$title, _o$OK, _o$CANSEL, _o$wWidth, _o$wHeight, _o$target;
-
-    var o = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    _classCallCheck(this, LittleModal);
-
-    this.options = {};
-    this.options.inner = (_o$inner = o.inner) !== null && _o$inner !== void 0 ? _o$inner : '';
-    this.options.title = (_o$title = o.title) !== null && _o$title !== void 0 ? _o$title : 'Little modal';
-    this.options.OK = (_o$OK = o.OK) !== null && _o$OK !== void 0 ? _o$OK : false;
-    this.options.CANSEL = (_o$CANSEL = o.CANSEL) !== null && _o$CANSEL !== void 0 ? _o$CANSEL : false;
-    this.options.wWidth = (_o$wWidth = o.wWidth) !== null && _o$wWidth !== void 0 ? _o$wWidth : 300;
-    this.options.wHeight = (_o$wHeight = o.wHeight) !== null && _o$wHeight !== void 0 ? _o$wHeight : 150;
-    this.$element = null;
-    this.target = (_o$target = o.target) !== null && _o$target !== void 0 ? _o$target : "body";
-    this.scope = document.querySelector(o.scope) || false;
-    this.tochX = 0;
-    this.tochY = 0;
-    this.valueX = 0; //Math.round(Math.random()*1000)
-
-    this.valueY = 0; //Math.round(Math.random()*1000)
-
-    this.borderXMin = 0;
-    this.borderXMax = 0;
-    this.borderYMin = 0;
-    this.borderYMax = 0;
-    this.innerMinWidth = 250;
-    this.innerMinHeight = 150;
-    this.$body = document.querySelector('body');
-
-    if (this.scope) {
-      this.scope.style.position = 'relative';
-    }
-  }
-
-  _createClass(LittleModal, [{
-    key: "init",
-    value: function init() {
-      var _this$$element,
-          _this = this;
-
-      //если элемент есть, не инициализируем
-      if (this.$element !== null) {
-        return;
-      }
-
-      var $element = (_this$$element = this.$element) !== null && _this$$element !== void 0 ? _this$$element : getTemplate(this.options);
-      var maxWidth = this.options.wWidth;
-      var maxHeight = this.options.wHeight;
-      this.$element = $element;
-      this.$elTitle = $element.querySelector('.little-modal-title');
-      this.$elClose = this.$elTitle.querySelector('button');
-      this.$elBody = $element.querySelector('.little-modal-body');
-      this.$elDragLeft = $element.querySelector('.dLeft');
-      this.$elDragBottom = $element.querySelector('.dBottom');
-      this.$elDragRight = $element.querySelector('.dRight');
-      this.$elDragCornerLeft = $element.querySelector('.dCornerLeft');
-      this.$elDragCornerRight = $element.querySelector('.dCornerRight');
-      this.$elInner = $element.querySelector('.little-modal .inner-place');
-      this.$elBtnPlace = $element.querySelector('.little-modal-button-place');
-      this.$element.style.width = maxWidth === "auto" ? "auto" : maxWidth + 'px';
-      this.$element.style.height = maxHeight === "auto" ? "auto" : maxHeight + 'px';
-      document.querySelector(this.target) ? document.querySelector(this.target).appendChild(this.$element) : document.body.insertAdjacentElement('afterbegin', this.$element);
-      ['mouseMoveDragCornerLeftHandler', 'mouseMoveDragCornerRightHandler', 'mouseMoveDragLeftHandler', 'mouseMoveDragBottomHandler', 'mouseMoveDragRightHandler', 'mouseDownHandler', 'mouseUpHandler', 'onButton', 'mouseMoveHandler', 'onResize', 'onClose'].forEach(function (element) {
-        return _this[element] = _this[element].bind(_this);
-      });
-      window.addEventListener('resize', this.onResize);
-      this.$elClose.addEventListener('click', this.onClose);
-      this.$elBtnPlace.addEventListener('click', this.onButton);
-      this.$elTitle.addEventListener('mousedown', this.mouseDownHandler);
-      this.$elDragLeft.addEventListener('mousedown', this.mouseDownHandler);
-      this.$elDragBottom.addEventListener('mousedown', this.mouseDownHandler);
-      this.$elDragRight.addEventListener('mousedown', this.mouseDownHandler);
-      this.$elDragCornerLeft.addEventListener('mousedown', this.mouseDownHandler);
-      this.$elDragCornerRight.addEventListener('mousedown', this.mouseDownHandler);
-      this.calculate();
-    } //пересчет переменых
-
-  }, {
-    key: "calculate",
-    value: function calculate() {
-      this.tochX = 0;
-      this.tochY = 0;
-      this.elementWidth = this.$element.offsetWidth;
-      this.elementHeight = this.$element.offsetHeight;
-      this.windowWidth = window.innerWidth;
-      this.windowHeight = window.innerHeight;
-      this.borderXMax = this.windowWidth;
-      this.borderYMax = this.windowHeight; //если есть внешние рамки то берем их
-
-      if (this.scope) {
-        var scope = this.scope.getBoundingClientRect();
-        this.borderXMin = scope.left;
-        this.borderXMax = scope.right;
-        this.borderYMin = scope.top;
-        this.borderYMax = scope.bottom;
-        this.windowWidth = scope.width;
-        this.windowHeight = scope.height;
-      }
-
-      this.limitWidth = this.windowWidth - this.elementWidth;
-      this.limitHeight = this.windowHeight - this.elementHeight;
-      this.setPosition(this.valueX, this.valueY);
-      console.log('calculating');
-    } //для обертки открыть
-
-  }, {
-    key: "open",
-    value: function open(params) {
-      console.log(params);
-
-      for (var key in params) {
-        if (this.options[key] !== 'undefined') {
-          this.options[key] = params[key];
-        }
-      }
-
-      this.init();
-    } //для обертки закрыть
-
-  }, {
-    key: "close",
-    value: function close() {
-      if (this.$element !== null) this.destroy();
-    } //двигаем окно
-
-  }, {
-    key: "setPosition",
-    value: function setPosition(x, y) {
-      var minX = this.tochX;
-      var maxX = this.windowWidth - this.elementWidth + this.tochX;
-      var minY = this.tochY;
-      var maxY = this.windowHeight - this.elementHeight + this.tochY;
-      this.valueX = x - this.tochX;
-      this.valueY = y - this.tochY;
-      this.valueX = this.valueX > 0 ? this.valueX : 0;
-      this.valueX = this.valueX > this.limitWidth ? this.limitWidth : this.valueX;
-      this.valueY = this.valueY > 0 ? this.valueY : 0;
-      this.valueY = this.valueY > this.limitHeight ? this.limitHeight : this.valueY;
-      this.valueX = x > minX ? this.valueX : 0;
-      this.valueX = x > maxX ? this.limitWidth : this.valueX;
-      this.valueY = y > minY ? this.valueY : 0;
-      this.valueY = y > maxY ? this.limitHeight : this.valueY;
-      this.$element.style.left = this.valueX + 'px';
-      this.$element.style.top = this.valueY + 'px';
-    }
-  }, {
-    key: "moveDragLeft",
-    value: function moveDragLeft(pX, pY) {
-      //console.log('left')
-      if (this.limits(pX, pY)) {
-        var x = this.dragX - pX;
-        this.dragX = pX;
-        this.elementWidth = pX > this.maximumPosXForLeft ? this.innerMinWidth : this.elementWidth + x;
-        this.valueX = pX > this.maximumPosXForLeft ? this.dragMaximumLeftPositionX : this.valueX - x;
-
-        if (this.valueX > -1) {
-          this.$element.style.width = this.elementWidth + 'px';
-          this.$element.style.left = this.valueX + 'px';
-        }
-      }
-    }
-  }, {
-    key: "moveDragBottom",
-    value: function moveDragBottom(pX, pY) {
-      //console.log('bottom')
-      if (this.limits(pX, pY)) {
-        var y = this.dragY - pY;
-        this.dragY = pY;
-        this.elementHeight = pY > this.maximumPosYForBottom ? this.elementHeight - y : this.innerMinHeight;
-
-        if (this.elementHeight + this.valueY <= this.windowHeight) {
-          this.$element.style.height = this.elementHeight + 'px';
-        }
-      }
-    }
-  }, {
-    key: "moveDragRight",
-    value: function moveDragRight(pX, pY) {
-      //console.log('right')
-      if (this.limits(pX, pY)) {
-        var x = this.dragX - pX;
-        this.dragX = pX;
-        this.elementWidth = pX > this.maximumPosXForRight ? this.elementWidth - x : this.innerMinWidth;
-
-        if (this.elementWidth + this.valueX <= this.windowWidth) {
-          this.$element.style.width = this.elementWidth + 'px';
-        }
-      }
-    }
-  }, {
-    key: "onClose",
-    value: function onClose(e) {
-      this.close();
-    }
-  }, {
-    key: "onButton",
-    value: function onButton(e) {
-      switch (e.target.getAttribute('data-type')) {
-        case 'OK':
-          this.options.onOk && this.options.onOk.call(this.options, e);
-          break;
-
-        case 'CANSEL':
-          this.options.onCansel && this.options.onCansel.call(this.options, e);
-          break;
-      }
-    }
-  }, {
-    key: "onResize",
-    value: function onResize(e) {
-      this.calculate();
-    }
-  }, {
-    key: "mouseDownHandler",
-    value: function mouseDownHandler(e) {
-      var withLimit = this.elementWidth - this.innerMinWidth;
-      var heightLimit = this.elementHeight - this.innerMinHeight;
-      this.dragX = e.clientX;
-      this.dragY = e.clientY; //максимальная позиция мыши по x при которой изменяется ширина окна
-
-      this.maximumPosXForLeft = e.clientX + withLimit;
-      this.maximumPosXForRight = e.clientX - withLimit;
-      this.maximumPosYForBottom = e.clientY - heightLimit;
-      this.dragMaximumLeftPositionX = this.$element.getBoundingClientRect().left - this.borderXMin + withLimit;
-
-      switch (e.target.getAttribute('data-type')) {
-        case 'left':
-          document.addEventListener('mousemove', this.mouseMoveDragLeftHandler);
-          break;
-
-        case 'bottom':
-          document.addEventListener('mousemove', this.mouseMoveDragBottomHandler);
-          break;
-
-        case 'right':
-          document.addEventListener('mousemove', this.mouseMoveDragRightHandler);
-          break;
-
-        case 'cornerLeft':
-          document.addEventListener('mousemove', this.mouseMoveDragCornerLeftHandler);
-          break;
-
-        case 'cornerRight':
-          document.addEventListener('mousemove', this.mouseMoveDragCornerRightHandler);
-          break;
-
-        case 'title':
-          this.tochX = e.clientX - this.$element.getBoundingClientRect().left;
-          this.tochY = e.clientY - this.$element.getBoundingClientRect().top;
-
-          if (this.scope) {
-            var scope = this.scope.getBoundingClientRect();
-            this.tochX += scope.left;
-            this.tochY += scope.top;
-          }
-
-          document.addEventListener('mousemove', this.mouseMoveHandler);
-          break;
-      }
-
-      document.addEventListener('mouseup', this.mouseUpHandler);
-    }
-  }, {
-    key: "mouseMoveDragCornerLeftHandler",
-    value: function mouseMoveDragCornerLeftHandler(e) {
-      this.moveDragLeft(e.clientX, e.clientY);
-      this.moveDragBottom(e.clientX, e.clientY);
-    }
-  }, {
-    key: "mouseMoveDragCornerRightHandler",
-    value: function mouseMoveDragCornerRightHandler(e) {
-      this.moveDragRight(e.clientX, e.clientY);
-      this.moveDragBottom(e.clientX, e.clientY);
-    }
-  }, {
-    key: "mouseMoveDragLeftHandler",
-    value: function mouseMoveDragLeftHandler(e) {
-      this.moveDragLeft(e.clientX, e.clientY);
-    }
-  }, {
-    key: "mouseMoveDragBottomHandler",
-    value: function mouseMoveDragBottomHandler(e) {
-      this.moveDragBottom(e.clientX, e.clientY);
-    }
-  }, {
-    key: "mouseMoveDragRightHandler",
-    value: function mouseMoveDragRightHandler(e) {
-      this.moveDragRight(e.clientX, e.clientY);
-    }
-  }, {
-    key: "mouseUpHandler",
-    value: function mouseUpHandler(e) {
-      console.log('remove listeners');
-      document.removeEventListener('mousemove', this.mouseMoveHandler);
-      document.removeEventListener('mousemove', this.downDragMouse);
-      document.removeEventListener('mousemove', this.mouseMoveDragLeftHandler);
-      document.removeEventListener('mousemove', this.mouseMoveDragBottomHandler);
-      document.removeEventListener('mousemove', this.mouseMoveDragRightHandler);
-      document.removeEventListener('mousemove', this.mouseMoveDragCornerLeftHandler);
-      document.removeEventListener('mousemove', this.mouseMoveDragCornerRightHandler);
-      document.removeEventListener('mouseup', this.mouseUpHandler);
-      document.removeEventListener('mousedown', this.mouseDownHandler);
-      this.calculate();
-    }
-  }, {
-    key: "mouseMoveHandler",
-    value: function mouseMoveHandler(e) {
-      if (this.limits(e.clientX, e.clientY)) {
-        this.setPosition(e.clientX, e.clientY);
-      }
-    }
-  }, {
-    key: "limits",
-    value: function limits(x, y) {
-      if (x > this.borderXMin && x < this.borderXMax && y > this.borderYMin && y < this.borderYMax) {
-        return true;
-      }
-
-      return false;
-    }
-  }, {
-    key: "destroy",
-    value: function destroy() {
-      this.$elClose.removeEventListener('onclick', this.onClose);
-      window.removeEventListener('resize', this.onResize);
-      this.$elTitle.removeEventListener('mousedown', this.mouseDownHandler);
-      this.$elBtnPlace.removeEventListener('click', this.onButton);
-      this.$element.parentNode.removeChild(this.$element);
-      this.$element = null;
-    }
-  }]);
-
-  return LittleModal;
-}();
-
-
-;// CONCATENATED MODULE: ./src/index.js
-
-
-/* harmony default export */ var src = ({
-  //обертка для класса
-  init: function init() {
-    var o = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var instance = null;
-    return {
-      open: function open() {
-        var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-        instance = instance === null ? new LittleModal(o) : instance;
-        instance.open(params);
-      },
-      close: function close() {
-        if (instance !== null) instance.close();else console.log('is it already closed');
-      }
-    };
-  }
-});
-__webpack_exports__ = __webpack_exports__.default;
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module can't be inlined because the eval devtool is used.
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/index.js");
+/******/ 	__webpack_exports__ = __webpack_exports__.default;
+/******/ 	
 /******/ 	return __webpack_exports__;
 /******/ })()
 ;
