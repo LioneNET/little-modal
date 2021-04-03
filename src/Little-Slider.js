@@ -60,7 +60,7 @@ export default class LittleSlider {
 		this.scaleHeight = this.$element.offsetHeight - this.pointerHeight;
 		this.setPosition(this.currentPos)
 
-		console.log(outer, inner)
+		//console.log(outer, inner)
 	}
 
 	//при нажатии кнопки мыши
