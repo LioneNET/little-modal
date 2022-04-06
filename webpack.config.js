@@ -1,5 +1,6 @@
 const path = require("path")
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWbepackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: path.resolve(__dirname, "src/index.js"),
@@ -9,11 +10,16 @@ module.exports = {
     library: "littlemodal",
     libraryExport: 'default',
     libraryTarget: "umd",
+    clean: true
   },
   optimization: {
-    minimize: false
+    minimize: true
   },
   plugins: [
+    new HtmlWbepackPlugin({
+      template: path.resolve(__dirname, './src/index.html'),
+      filename: 'index.html'
+    }),
     new MiniCssExtractPlugin({
       filename: "style.css"
     })
@@ -28,17 +34,11 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: ['@babel/preset-env'],
-            /*plugins: [
-              ["@babel/plugin-proposal-private-methods"],
-              ["@babel/plugin-proposal-class-properties"],
-              ["@babel/plugin-transform-arrow-functions"]
-            ]*/
           }
         }
       },
       {
         test: /\.s[ac]ss$/,
-        /*парсинг лоадеров идет с права на лево*/
         use: [
           {
             loader: MiniCssExtractPlugin.loader,

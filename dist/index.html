@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Document</title><style>.box {
+      width: 600px;
+      height: 450px;
+      background-color: #ececec;
+      margin: 0 auto;
+      margin-top: 50px;
+    }</style><script defer="defer" src="littlemodal.js"></script><link href="style.css" rel="stylesheet"></head><body><div class="box"><div class="modal"></div></div><script>window.addEventListener('load', function () {
+      console.log(littlemodal)
+      var modal = littlemodal.init()
+      littlemodal.init({
+        target: '.modal',
+        scope: '.box',
+        inner: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi maxime, tempore. Sunt ratione veniam omnis doloremque corrupti facilis minima dolorem impedit aliquid aliquam iste mollitia, at repellendus debitis quo distinctio. Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi maxime, tempore. Sunt ratione veniam omnis doloremque corrupti facilis minima dolorem impedit aliquid aliquam iste mollitia, at repellendus debitis quo distinctio.',
+        wWidth: 350,
+        wHeight: 170,
+        OK: 'OK',
+        CANSEL: "CANSEL"
+      }).open();
+      
+      var modal2 = littlemodal.init();
+      modal2.open({
+        wWidth: 350,
+        title: 'modal',
+        inner: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi maxime, tempore. Sunt ratione veniam omnis doloremque corrupti facilis minima dolorem impedit aliquid aliquam iste mollitia, at repellendus debitis quo distinctio. Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi maxime, tempore. Sunt ratione veniam omnis doloremque corrupti facilis minima dolorem impedit aliquid aliquam iste mollitia, at repellendus debitis quo distinctio.',
+        OK: 'OK',
+        CANSEL: 'Закрыть',
+
+        onOk: function (e) {
+          console.log(this)
+        },
+        onCansel: function (e) {
+          console.log(this)
+          modal2.close()
+        },
+        onSliderShow: function () {
+          console.log('onSliderShow function is call')
+        },
+        onSliderHide: function () {
+          console.log('onSliderHide function is call')
+        },
+        onSliderChange: function (value) {
+          console.log('onSliderChange', value)
+        },
+        onSliderScroll: function (value) {
+          console.log('onSliderScroll', value)
+        }
+      })
+    })</script></body></html>

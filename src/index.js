@@ -20,7 +20,5 @@ export default {
 		  		console.log('is it already closed')
 		  }
   	}
-  },
-
- 
+  }
 }
